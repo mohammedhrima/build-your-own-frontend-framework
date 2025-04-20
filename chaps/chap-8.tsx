@@ -17,23 +17,18 @@ function check(children: any): any {
 				},
 			});
 		}
-		else if (Array.isArray(child)) {
-			result.push(...check(child));
+		else if (child != undefined && child) {
+			result.push(child);
 		}
-		else if (child != undefined && child) result.push(child);
 	});
 	return result;
-}
-
-function fragment(props = {}, ...children) {
-	return children;
 }
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props, children);
+			funcTag = tag(props);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
@@ -43,8 +38,6 @@ function element(tag, props = {}, ...children) {
 		funcTag.isfunc = true;
 		return funcTag;
 	}
-	console.log("hey", tag, "children:", children);
-
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -98,7 +91,6 @@ function createDOM(vdom) {
 			else {
 				vdom.dom = document.createElement(vdom.tag);
 			}
-			console.log("children:", vdom.children);
 			vdom.children?.forEach(child => {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom);
@@ -117,48 +109,48 @@ function createDOM(vdom) {
 }
 
 
-function destroy(vdom): void {
-	removeProps(vdom);
-	vdom.dom?.remove();
-	vdom.dom = null;
-	vdom.children?.map(destroy);
-}
-
-function execute(mode, prev, next = null) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(prev);
-			prev.children?.map((child) => {
-				if (child) {
-					child = execute(mode, child);
-					prev.dom.appendChild((child).dom);
-				}
-			});
-			break;
-		}
-		case REPLACE: {
-			removeProps(prev);
-			execute(CREATE, next);
-
-			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
-
-			prev.dom = next.dom;
-			prev.children = next.children;
-			// I commented it because it caused me an error
-			// in the slider
-			// removeProps(prev);
-			prev.props = next.props;
-			break;
-		}
-		case REMOVE: {
-			destroy(prev);
-			break;
-		}
-		default:
-			break;
-	}
-	return prev;
-}
+function destroy(vdom: VDOM): void {
+    removeProps(vdom);
+    vdom.dom?.remove();
+    vdom.dom = null;
+    vdom.children?.map(destroy);
+ }
+ 
+function execute(mode: number, prev: VDOM, next: VDOM = null) {
+    switch (mode) {
+       case CREATE: {
+          createDOM(prev);
+          prev.children?.map((child) => {
+             if (child) {
+                child = execute(mode, child as VDOM);
+                prev.dom.appendChild((child as VDOM).dom);
+             }
+          });
+          break;
+       }
+       case REPLACE: {
+          removeProps(prev);
+          execute(CREATE, next);
+ 
+          if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
+ 
+          prev.dom = next.dom;
+          prev.children = next.children;
+          // I commented it because it caused me an error
+          // in the slider
+          // removeProps(prev);
+          prev.props = next.props;
+          break;
+       }
+       case REMOVE: {
+          destroy(prev);
+          break;
+       }
+       default:
+          break;
+    }
+    return prev;
+ }
 
 function deepEqual(a, b) {
 	if (a !== a && b !== b) return true; // NaN is the only value that is not equal to itself
@@ -230,116 +222,64 @@ function reconciliate(prev, next) {
 
 let globalVDOM = null;
 function display(vdom) {
-	if (globalVDOM !== null) reconciliate(globalVDOM, vdom);
-	else {
+	if (!globalVDOM) {
 		execute(CREATE, vdom);
 		globalVDOM = vdom;
 	}
-	return globalVDOM;
+	else reconciliate(globalVDOM, vdom);
+	return vdom;
 }
 
 function init() {
-	let index = 1;
 	let vdom = null;
+	let view = null;
 	let states = {};
-
-	let View = () => <empty></empty>;
+	let index = 1;
 
 	const State = (initValue) => {
 		const stateIndex = index++;
 		states[stateIndex] = initValue;
 
 		const getter = () => states[stateIndex];
-		const setter = (newValue) => {
-			if (!deepEqual(states[stateIndex], newValue)) {
-				states[stateIndex] = newValue;
-				updateState();
-			}
-		};
+		const setter = (newValue: any) => {
+			states[stateIndex] = newValue;
+			updateState();
+		}
 		return [getter, setter];
-	};
-
+	}
 
 	const updateState = () => {
-		const newVDOM = View();
+		const newVDOM = view();
 		if (vdom !== null) reconciliate(vdom, newVDOM);
 		else vdom = newVDOM;
 	};
 
-	const render = (call) => {
-		View = call;
-		updateState();
+	const render = (callback) => {
+		view = callback;
+		vdom = view();
 		return vdom;
-	};
-	return { render, State };
+	}
+
+	return { State, render };
 }
 
 
-const Routes = {};
-function setRoute(path, callback) {
-	Routes[path] = callback;
-}
-
-function refresh() {
-	let path = window.location.hash.substring(1) || "*";
-	console.log("path:", path);
-	const RouteConfig = Routes[path] || Routes["*"];
-	return display(<RouteConfig />);
-}
-
-function navigate(path) {
-	console.log("navigate to ", path);
-
-	window.location.hash = path;
-}
-
-
-
-function Home() {
+function Component() {
 	const { render, State } = init();
+	const [count, setCount] = State(1);
+	//@ts-ignore
+	const HandleClique = () => setCount(count() + 1);
 	return render(() =>
 		<root>
-			<div>
-				Hello this is Home
+			<div className="container" onclick={HandleClique}>
+				{/*@ts-ignore */}
+				<button>Counter {count()}</button>
 			</div>
-			<button onclick={() => navigate("about")}>
-				navigate to about
-			</button>
-		</root>
-	)
+		</root>)
 }
 
-function About() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is About
-			</div>
-			<button onclick={() => navigate("user")}>
-				navigate to user
-			</button>
-		</root>
-	)
+function updateView() {
+	display(<Component />);
 }
 
-function User() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is User
-			</div>
-			<button onclick={() => navigate("home")}>
-				navigate to home
-			</button>
-		</root>
-	)
-}
-
-setRoute("*", Home);
-setRoute("about", About);
-setRoute("user", User);
-
-window.addEventListener("DOMContentLoaded", refresh);
-window.addEventListener("hashchange", refresh)
+updateView();

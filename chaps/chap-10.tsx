@@ -117,48 +117,48 @@ function createDOM(vdom) {
 }
 
 
-function destroy(vdom): void {
-	removeProps(vdom);
-	vdom.dom?.remove();
-	vdom.dom = null;
-	vdom.children?.map(destroy);
-}
-
-function execute(mode, prev, next = null) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(prev);
-			prev.children?.map((child) => {
-				if (child) {
-					child = execute(mode, child);
-					prev.dom.appendChild((child).dom);
-				}
-			});
-			break;
-		}
-		case REPLACE: {
-			removeProps(prev);
-			execute(CREATE, next);
-
-			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
-
-			prev.dom = next.dom;
-			prev.children = next.children;
-			// I commented it because it caused me an error
-			// in the slider
-			// removeProps(prev);
-			prev.props = next.props;
-			break;
-		}
-		case REMOVE: {
-			destroy(prev);
-			break;
-		}
-		default:
-			break;
-	}
-	return prev;
-}
+function destroy(vdom: VDOM): void {
+    removeProps(vdom);
+    vdom.dom?.remove();
+    vdom.dom = null;
+    vdom.children?.map(destroy);
+ }
+ 
+function execute(mode: number, prev: VDOM, next: VDOM = null) {
+    switch (mode) {
+       case CREATE: {
+          createDOM(prev);
+          prev.children?.map((child) => {
+             if (child) {
+                child = execute(mode, child as VDOM);
+                prev.dom.appendChild((child as VDOM).dom);
+             }
+          });
+          break;
+       }
+       case REPLACE: {
+          removeProps(prev);
+          execute(CREATE, next);
+ 
+          if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
+ 
+          prev.dom = next.dom;
+          prev.children = next.children;
+          // I commented it because it caused me an error
+          // in the slider
+          // removeProps(prev);
+          prev.props = next.props;
+          break;
+       }
+       case REMOVE: {
+          destroy(prev);
+          break;
+       }
+       default:
+          break;
+    }
+    return prev;
+ }
 
 function deepEqual(a, b) {
 	if (a !== a && b !== b) return true; // NaN is the only value that is not equal to itself
@@ -275,71 +275,36 @@ function init() {
 }
 
 
-const Routes = {};
-function setRoute(path, callback) {
-	Routes[path] = callback;
+function Component() {
+	const { render, State } = init();
+	const [count, setCount] = State(1);
+	//@ts-ignore
+	const HandleClique = () => setCount(count() + 1);
+	return render(() =>
+		<div className="container" onclick={HandleClique}>
+			{/*@ts-ignore */}
+			<button>Counter {count()}</button>
+		</div>)
 }
-
-function refresh() {
-	let path = window.location.hash.substring(1) || "*";
-	console.log("path:", path);
-	const RouteConfig = Routes[path] || Routes["*"];
-	return display(<RouteConfig />);
-}
-
-function navigate(path) {
-	console.log("navigate to ", path);
-
-	window.location.hash = path;
-}
-
-
 
 function Home() {
 	const { render, State } = init();
 	return render(() =>
 		<root>
-			<div>
-				Hello this is Home
-			</div>
-			<button onclick={() => navigate("about")}>
-				navigate to about
-			</button>
+			<>
+				<Component />
+				<Component />
+			</>
+			<>
+				<Component />
+				<Component />
+			</>
 		</root>
 	)
 }
 
-function About() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is About
-			</div>
-			<button onclick={() => navigate("user")}>
-				navigate to user
-			</button>
-		</root>
-	)
+function start() {
+	display(<Home />);
 }
 
-function User() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is User
-			</div>
-			<button onclick={() => navigate("home")}>
-				navigate to home
-			</button>
-		</root>
-	)
-}
-
-setRoute("*", Home);
-setRoute("about", About);
-setRoute("user", User);
-
-window.addEventListener("DOMContentLoaded", refresh);
-window.addEventListener("hashchange", refresh)
+start();
