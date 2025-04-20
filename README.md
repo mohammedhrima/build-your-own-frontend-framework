@@ -41,7 +41,7 @@
 
 ```
 
-#Chapters
+# Chapters
 
 Each chapter builds on the previous one. Explore them in the `./chaps` folder.
 
