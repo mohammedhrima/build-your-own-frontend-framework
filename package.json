@@ -10,11 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/mohammedhrima/build-your-own-js-framework.git"
   },
-  "keywords": [
-    "javascript",
-    "typescript",
-    "framework"
-  ],
+  "keywords": [],
   "author": "mohammed hrima",
   "license": "ISC",
   "bugs": {
@@ -24,8 +20,5 @@
   "description": "tutorial of how to build your own frontend framework",
   "devDependencies": {
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    
   }
 }

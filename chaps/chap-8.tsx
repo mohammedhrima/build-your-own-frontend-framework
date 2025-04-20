@@ -5,8 +5,7 @@ const CREATE = "create";
 const REPLACE = "replace";
 const REMOVE = "remove";
 
-
-function check(children: any): any {
+function check(children) {
 	let result = [];
 	children.forEach((child) => {
 		if (typeof child === "string" || typeof child === "number") {
@@ -47,14 +46,24 @@ function element(tag, props = {}, ...children) {
 }
 
 function setProps(vdom) {
+	if (vdom.type == TEXT) return;
 	const { props } = vdom;
+	const style = {};
 	Object.keys(props || {}).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
+		} else if (key === "style") Object.assign(style, props[key]);
+		else {
+			vdom.dom.setAttribute(key, props[key]);
 		}
-		else vdom.dom[key] = props[key];
 	});
+	if (Object.keys(style).length > 0) {
+		vdom.dom.style.cssText = Object.keys(style).map((styleProp) => {
+			const Camelkey = styleProp.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+			return `${Camelkey}:${style[styleProp]}`;
+		}).join(";");
+	}
 }
 
 function removeProps(vdom) {
@@ -91,10 +100,6 @@ function createDOM(vdom) {
 			else {
 				vdom.dom = document.createElement(vdom.tag);
 			}
-			vdom.children?.forEach(child => {
-				createDOM(child);
-				vdom.dom.appendChild(child.dom);
-			});
 			break;
 		}
 		case TEXT: {
@@ -109,48 +114,48 @@ function createDOM(vdom) {
 }
 
 
-function destroy(vdom: VDOM): void {
-    removeProps(vdom);
-    vdom.dom?.remove();
-    vdom.dom = null;
-    vdom.children?.map(destroy);
- }
- 
-function execute(mode: number, prev: VDOM, next: VDOM = null) {
+function destroy(vdom) {
+	removeProps(vdom);
+	vdom.dom?.remove();
+	vdom.dom = null;
+	vdom.children?.map(destroy);
+}
+
+function execute(mode, prev, next = null) {
     switch (mode) {
-       case CREATE: {
-          createDOM(prev);
-          prev.children?.map((child) => {
-             if (child) {
-                child = execute(mode, child as VDOM);
-                prev.dom.appendChild((child as VDOM).dom);
-             }
-          });
-          break;
-       }
-       case REPLACE: {
-          removeProps(prev);
-          execute(CREATE, next);
- 
-          if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
- 
-          prev.dom = next.dom;
-          prev.children = next.children;
-          // I commented it because it caused me an error
-          // in the slider
-          // removeProps(prev);
-          prev.props = next.props;
-          break;
-       }
-       case REMOVE: {
-          destroy(prev);
-          break;
-       }
-       default:
-          break;
+        case CREATE: {
+            console.log("create", prev);
+            createDOM(prev);
+            prev.children?.map((child) => {
+                if (child) {
+                    child = execute(mode, child);
+                    prev.dom.appendChild((child).dom);
+                }
+            });
+            break;
+        }
+        case REPLACE: {
+            console.log("replace", prev);
+            removeProps(prev);
+            execute(CREATE, next);
+
+            if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
+
+            prev.dom = next.dom;
+            prev.children = next.children;
+            prev.props = next.props;
+            break;
+        }
+        case REMOVE: {
+            console.log("remove", prev);
+            destroy(prev);
+            break;
+        }
+        default:
+            break;
     }
     return prev;
- }
+}
 
 function deepEqual(a, b) {
 	if (a !== a && b !== b) return true; // NaN is the only value that is not equal to itself
@@ -181,7 +186,7 @@ function deepEqual(a, b) {
 
 
 function reconciliate(prev, next) {
-	if (prev.type != next.type || prev.tag != next.tag || (prev.type == TEXT && prev.props.value != next.props.value))
+	if (prev.type != next.type || prev.tag != next.tag || !deepEqual(prev.props, next.props))
 		return execute(REPLACE, prev, next);
 
 	const prevs = prev.children || [];
@@ -241,9 +246,11 @@ function init() {
 		states[stateIndex] = initValue;
 
 		const getter = () => states[stateIndex];
-		const setter = (newValue: any) => {
-			states[stateIndex] = newValue;
-			updateState();
+		const setter = (newValue) => {
+			if (!deepEqual(states[stateIndex], newValue)) {
+				states[stateIndex] = newValue;
+				updateState();
+			}
 		}
 		return [getter, setter];
 	}
@@ -271,7 +278,7 @@ function Component() {
 	const HandleClique = () => setCount(count() + 1);
 	return render(() =>
 		<root>
-			<div className="container" onclick={HandleClique}>
+			<div className="container-2" onclick={HandleClique}>
 				{/*@ts-ignore */}
 				<button>Counter {count()}</button>
 			</div>

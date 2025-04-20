@@ -1,10 +1,11 @@
-const ELEMENT = 1;
-const TEXT = 2;
+const ELEMENT = "element";
+const TEXT = "text";
 
-const CREATE = 3;
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
 
-
-function check(children: any): any {
+function check(children) {
 	let result = [];
 	children.forEach((child) => {
 		if (typeof child === "string" || typeof child === "number") {
@@ -45,24 +46,31 @@ function element(tag, props = {}, ...children) {
 }
 
 function setProps(vdom) {
+	if (vdom.type == TEXT) return;
 	const { props } = vdom;
+	const style = {};
 	Object.keys(props || {}).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
+		} else if (key === "style") Object.assign(style, props[key]);
+		else {
+			vdom.dom.setAttribute(key, props[key]);
 		}
-		else vdom.dom[key] = props[key];
 	});
+	if (Object.keys(style).length > 0) {
+		vdom.dom.style.cssText = Object.keys(style).map((styleProp) => {
+			const Camelkey = styleProp.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+			return `${Camelkey}:${style[styleProp]}`;
+		}).join(";");
+	}
 }
 
 function createDOM(vdom) {
+	console.log("createDOM", vdom);
 	switch (vdom.type) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
-			vdom.children?.forEach(child => {
-				createDOM(child);
-				vdom.dom.appendChild(child.dom);
-			});
 			break;
 		}
 		case TEXT: {
@@ -80,6 +88,10 @@ function execute(mode, vdom) {
 	switch (mode) {
 		case CREATE: {
 			createDOM(vdom);
+			vdom.children?.forEach(child => {
+				execute(mode, child);
+				vdom.dom.appendChild(child.dom);
+			});
 			break;
 		}
 		default:
@@ -92,14 +104,25 @@ function display(vdom) {
 	return vdom;
 }
 
-const root = document.getElementById("root");
-
 const HandleClique = () => {
 	alert("Cliqued me")
 }
 
 function Component() {
-	return <div className="container" onclick={HandleClique} ><button>Hello World</button></div>
+	return (
+		<div className="container" >
+        <h1>Hello World</h1>
+        <button
+            onclick={HandleClique}
+            style={{
+                backgroundColor: "#e2e8f0", cursor: "pointer",
+                padding: "10px 15px", fontSize: "25px", margin: "10px 50px"
+            }}
+        >clique me</button>
+    </div>
+	)
 }
+const res = display(<Component />);
 
-root.appendChild(display(<Component />).dom);
+const root = document.getElementById("root");
+root.appendChild(res.dom);

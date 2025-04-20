@@ -1,87 +1,113 @@
-const ELEMENT = 1;
-const TEXT = 2;
+const ELEMENT = "element";
+const TEXT = "text";
 
-const CREATE = 3;
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
 
-
-function check(children: any): any {
-	let result = [];
-	children.forEach((child) => {
-		if (typeof child === "string" || typeof child === "number") {
-			result.push({
-				type: TEXT,
-				props: {
-					value: child,
-				},
-			});
-		}
-		else if (child != undefined && child) {
-			result.push(child);
-		}
-	});
-	return result;
+function check(children) {
+    let result = [];
+    children.forEach((child) => {
+        if (typeof child === "string" || typeof child === "number") {
+            result.push({
+                type: TEXT,
+                props: {
+                    value: child,
+                },
+            });
+        }
+        else if (child != undefined && child) {
+            result.push(child);
+        }
+    });
+    return result;
 }
 
 function element(tag, props = {}, ...children) {
-	return {
-		type: ELEMENT,
-		tag: tag,
-		props: props,
-		children: check(children || [])
-	}
+    return {
+        type: ELEMENT,
+        tag: tag,
+        props: props,
+        children: check(children || [])
+    }
 }
 
 function setProps(vdom) {
-	const { props } = vdom;
-	Object.keys(props || {}).forEach((key) => {
-		if (key.startsWith("on")) {
-			const eventType = key.slice(2).toLowerCase();
-			vdom.dom.addEventListener(eventType, props[key]);
-		}
-		else vdom.dom[key] = props[key];
-	});
+    if (vdom.type == TEXT) return;
+    const { props } = vdom;
+    const style = {};
+    Object.keys(props || {}).forEach((key) => {
+        if (key.startsWith("on")) {
+            const eventType = key.slice(2).toLowerCase();
+            vdom.dom.addEventListener(eventType, props[key]);
+        } else if (key === "style") Object.assign(style, props[key]);
+        else {
+            vdom.dom.setAttribute(key, props[key]);
+        }
+    });
+    if (Object.keys(style).length > 0) {
+        vdom.dom.style.cssText = Object.keys(style).map((styleProp) => {
+            const Camelkey = styleProp.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+            return `${Camelkey}:${style[styleProp]}`;
+        }).join(";");
+    }
 }
 
 function createDOM(vdom) {
-	switch (vdom.type) {
-		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
-			vdom.children?.forEach(child => {
-				createDOM(child);
-				console.log("child", child);
-
-				vdom.dom.appendChild(child.dom);
-			});
-			break;
-		}
-		case TEXT: {
-			vdom.dom = document.createTextNode(vdom.props.value);
-			break;
-		}
-		default:
-			break;
-	}
-	setProps(vdom);
-	return vdom;
+    console.log("createDOM", vdom);
+    switch (vdom.type) {
+        case ELEMENT: {
+            vdom.dom = document.createElement(vdom.tag);
+            break;
+        }
+        case TEXT: {
+            vdom.dom = document.createTextNode(vdom.props.value);
+            break;
+        }
+        default:
+            break;
+    }
+    setProps(vdom);
+    return vdom;
 }
 
 function execute(mode, vdom) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(vdom);
-			break;
-		}
-		default:
-			break;
-	}
+    switch (mode) {
+        case CREATE: {
+            createDOM(vdom);
+            vdom.children?.forEach(child => {
+                execute(mode, child);
+                vdom.dom.appendChild(child.dom);
+            });
+            break;
+        }
+        default:
+            break;
+    }
 }
-
 
 function display(vdom) {
-	execute(CREATE, vdom);
-	return vdom;
+    execute(CREATE, vdom);
+    return vdom;
 }
 
-let tag = <div className="container"><h1>Hello World</h1></div>
+const HandleClique = () => {
+    alert("Cliqued me")
+}
 
-document.getElementById("root").appendChild(display(tag).dom);
+let tag = (
+    <div className="container" >
+        <h1>Hello World</h1>
+        <button
+            onclick={HandleClique}
+            style={{
+                backgroundColor: "#e2e8f0", cursor: "pointer",
+                padding: "10px 15px", fontSize: "25px", margin: "10px 50px"
+            }}
+        >clique me</button>
+    </div>
+)
+const res = display(tag)
+
+const root = document.getElementById("root")
+root.appendChild(res.dom);

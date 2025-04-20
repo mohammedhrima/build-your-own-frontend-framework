@@ -5,8 +5,7 @@ const CREATE = "create";
 const REPLACE = "replace";
 const REMOVE = "remove";
 
-
-function check(children: any): any {
+function check(children) {
 	let result = [];
 	children.forEach((child) => {
 		if (typeof child === "string" || typeof child === "number") {
@@ -17,23 +16,18 @@ function check(children: any): any {
 				},
 			});
 		}
-		else if (Array.isArray(child)) {
-			result.push(...check(child));
+		else if (child != undefined && child) {
+			result.push(child);
 		}
-		else if (child != undefined && child) result.push(child);
 	});
 	return result;
-}
-
-function fragment(props = {}, ...children) {
-	return children;
 }
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props, children);
+			funcTag = tag(props);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
@@ -43,8 +37,6 @@ function element(tag, props = {}, ...children) {
 		funcTag.isfunc = true;
 		return funcTag;
 	}
-	console.log("hey", tag, "children:", children);
-
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -54,14 +46,24 @@ function element(tag, props = {}, ...children) {
 }
 
 function setProps(vdom) {
+	if (vdom.type == TEXT) return;
 	const { props } = vdom;
+	const style = {};
 	Object.keys(props || {}).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
+		} else if (key === "style") Object.assign(style, props[key]);
+		else {
+			vdom.dom.setAttribute(key, props[key]);
 		}
-		else vdom.dom[key] = props[key];
 	});
+	if (Object.keys(style).length > 0) {
+		vdom.dom.style.cssText = Object.keys(style).map((styleProp) => {
+			const Camelkey = styleProp.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+			return `${Camelkey}:${style[styleProp]}`;
+		}).join(";");
+	}
 }
 
 function removeProps(vdom) {
@@ -98,11 +100,6 @@ function createDOM(vdom) {
 			else {
 				vdom.dom = document.createElement(vdom.tag);
 			}
-			console.log("children:", vdom.children);
-			vdom.children?.forEach(child => {
-				createDOM(child);
-				vdom.dom.appendChild(child.dom);
-			});
 			break;
 		}
 		case TEXT: {
@@ -116,8 +113,7 @@ function createDOM(vdom) {
 	return vdom;
 }
 
-
-function destroy(vdom): void {
+function destroy(vdom) {
 	removeProps(vdom);
 	vdom.dom?.remove();
 	vdom.dom = null;
@@ -125,68 +121,40 @@ function destroy(vdom): void {
 }
 
 function execute(mode, prev, next = null) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(prev);
-			prev.children?.map((child) => {
-				if (child) {
-					child = execute(mode, child);
-					prev.dom.appendChild((child).dom);
-				}
-			});
-			break;
-		}
-		case REPLACE: {
-			removeProps(prev);
-			execute(CREATE, next);
+    switch (mode) {
+        case CREATE: {
+            console.log("create", prev);
+            createDOM(prev);
+            prev.children?.map((child) => {
+                if (child) {
+                    child = execute(mode, child);
+                    prev.dom.appendChild((child).dom);
+                }
+            });
+            break;
+        }
+        case REPLACE: {
+            console.log("replace", prev);
+            removeProps(prev);
+            execute(CREATE, next);
 
-			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
+            if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
 
-			prev.dom = next.dom;
-			prev.children = next.children;
-			// I commented it because it caused me an error
-			// in the slider
-			// removeProps(prev);
-			prev.props = next.props;
-			break;
-		}
-		case REMOVE: {
-			destroy(prev);
-			break;
-		}
-		default:
-			break;
-	}
-	return prev;
+            prev.dom = next.dom;
+            prev.children = next.children;
+            prev.props = next.props;
+            break;
+        }
+        case REMOVE: {
+            console.log("remove", prev);
+            destroy(prev);
+            break;
+        }
+        default:
+            break;
+    }
+    return prev;
 }
-
-function deepEqual(a, b) {
-	if (a !== a && b !== b) return true; // NaN is the only value that is not equal to itself
-	if (a === b) return true; // Handle primitive type comparison
-	if (a == null || b == null) return false;
-	if (typeof a !== typeof b) return false;
-	if (Array.isArray(a) && Array.isArray(b)) {
-		if (a.length !== b.length) return false;
-		for (let i = 0; i < a.length; i++) {
-			if (!deepEqual(a[i], b[i])) return false;
-		}
-		return true;
-	}
-	if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
-	if (a instanceof RegExp && b instanceof RegExp) return a.toString() === b.toString();
-	if (typeof a === "function" && typeof b === "function") return a.toString() === b.toString();
-	if (typeof a === "object" && typeof b === "object") {
-		const keysA = Object.keys(a);
-		const keysB = Object.keys(b);
-		if (keysA.length !== keysB.length) return false;
-		for (let key of keysA) {
-			if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
-		}
-		return true;
-	}
-	return false;
-}
-
 
 function reconciliate(prev, next) {
 	if (prev.type != next.type || prev.tag != next.tag || (prev.type == TEXT && prev.props.value != next.props.value))
@@ -198,20 +166,9 @@ function reconciliate(prev, next) {
 		let child1 = prevs[i];
 		let child2 = nexts[i];
 
-		if (child1 && child2 && (child1.isfunc || child2.isfunc)) {
-			if (!deepEqual(child1.func, child2.func)) {
-				execute(REPLACE, child1, child2);
-				prevs[i] = child2;
-			}
-			else if (!deepEqual(child1.funcProps, child2.funcProps)) {
-				execute(REPLACE, child1, child2);
-				prevs[i] = child2;
-			}
-		}
-		else if (child1 && child2) {
+		if (child1 && child2) {
 			reconciliate(child1, child2);
-		}
-		else if (!child1 && child2) {
+		} else if (!child1 && child2) {
 			if (i >= prevs.length) { // append
 				execute(CREATE, child2);
 				prevs.push(child2);
@@ -230,116 +187,47 @@ function reconciliate(prev, next) {
 
 let globalVDOM = null;
 function display(vdom) {
-	if (globalVDOM !== null) reconciliate(globalVDOM, vdom);
-	else {
+	if (!globalVDOM) {
 		execute(CREATE, vdom);
 		globalVDOM = vdom;
 	}
-	return globalVDOM;
+	else reconciliate(globalVDOM, vdom);
+	return vdom;
 }
 
-function init() {
-	let index = 1;
-	let vdom = null;
-	let states = {};
+let states = {};
+let index = 1;
+function State(initValue) {
+	const stateIndex = index++;
+	states[stateIndex] = initValue;
 
-	let View = () => <empty></empty>;
-
-	const State = (initValue) => {
-		const stateIndex = index++;
-		states[stateIndex] = initValue;
-
-		const getter = () => states[stateIndex];
-		const setter = (newValue) => {
-			if (!deepEqual(states[stateIndex], newValue)) {
-				states[stateIndex] = newValue;
-				updateState();
-			}
-		};
-		return [getter, setter];
-	};
-
-
-	const updateState = () => {
-		const newVDOM = View();
-		if (vdom !== null) reconciliate(vdom, newVDOM);
-		else vdom = newVDOM;
-	};
-
-	const render = (call) => {
-		View = call;
-		updateState();
-		return vdom;
-	};
-	return { render, State };
+	const getter = () => states[stateIndex];
+	const setter = (newValue) => {
+		states[stateIndex] = newValue;
+		updateView();
+	}
+	return [getter, setter];
 }
 
+const [count, setCount] = State(1);
 
-const Routes = {};
-function setRoute(path, callback) {
-	Routes[path] = callback;
-}
+//@ts-ignore
+const HandleClique = () => setCount(count() + 1);
 
-function refresh() {
-	let path = window.location.hash.substring(1) || "*";
-	console.log("path:", path);
-	const RouteConfig = Routes[path] || Routes["*"];
-	return display(<RouteConfig />);
-}
-
-function navigate(path) {
-	console.log("navigate to ", path);
-
-	window.location.hash = path;
-}
-
-
-
-function Home() {
-	const { render, State } = init();
-	return render(() =>
+function Component() {
+	//@ts-ignore
+	return (
 		<root>
-			<div>
-				Hello this is Home
+			<div className="container-2" onclick={HandleClique} >
+				{/*@ts-ignore */}
+				<button>Counter {count()}</button>
 			</div>
-			<button onclick={() => navigate("about")}>
-				navigate to about
-			</button>
 		</root>
 	)
 }
 
-function About() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is About
-			</div>
-			<button onclick={() => navigate("user")}>
-				navigate to user
-			</button>
-		</root>
-	)
+function updateView() {
+	display(<Component />);
 }
 
-function User() {
-	const { render, State } = init();
-	return render(() =>
-		<root>
-			<div>
-				Hello this is User
-			</div>
-			<button onclick={() => navigate("home")}>
-				navigate to home
-			</button>
-		</root>
-	)
-}
-
-setRoute("*", Home);
-setRoute("about", About);
-setRoute("user", User);
-
-window.addEventListener("DOMContentLoaded", refresh);
-window.addEventListener("hashchange", refresh)
+updateView();

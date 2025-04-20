@@ -8,11 +8,9 @@
     "outDir": "out",
     "jsxFactory": "element",
     "jsxFragmentFactory": "fragment",
-    "skipLibCheck": false,
     "allowJs": true,
-    "checkJs": true,
     "strict": false
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "chaps/**/*"]
+  "exclude": ["node_modules", "chaps"]
 }
