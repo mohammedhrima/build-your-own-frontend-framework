@@ -1,5 +1,7 @@
 # build your own framework
 
++ step by step to create a mini frontend framework using Typescript
+
 # Get started
 
 ```bash
