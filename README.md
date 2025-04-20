@@ -41,50 +41,50 @@
 
 ```
 
-# Chapter 1
-+ parsing JSX
-+ understand what is Virtual DOM
+#Chapters
 
-# Chapter 2
-+ create our first real dom from virtual dom, and set dom attributes
+Each chapter builds on the previous one. Explore them in the `./chaps` folder.
 
-# Chapter 3
-+ add execute function and its macros
-+ add children doms
-+ add text children
+### Chapter 1: JSX & Virtual DOM
+- Parse JSX syntax
+- Understand the Virtual DOM concept
 
-# Chapter 4
-+ add onclick event
-+ add style properties
+### Chapter 2: Real DOM Rendering
+- Convert Virtual DOM to Real DOM
+- Set DOM attributes
 
-# Chapter 5
-+ add our first component
+### Chapter 3: DOM Building
+- Add `execute` function and macros
+- Handle children and text nodes
 
-# Chapter 6
-+ add our first State
-+ update view when state change
+### Chapter 4: Interactivity
+- Add `onclick` events
+- Support inline styles
 
-# Chapter 7
-+ add root tag
-+ add reconciliation
-+ add removeProps
-+ add destroyDOM
-+ save globalVDOM
+### Chapter 5: Components
+- Introduce basic components
 
-# Chapter 8
-+ add deep equal function
-+ reconciliate functions Component 
-+ encompsulate state for each component
-+ add deepeqal to state setter
+### Chapter 6: State Management
+- Add reactive `State`
+- Update view on state change
 
-# Chapter 9
-+ call component inside another
+### Chapter 7: DOM Reconciliation
+- add root tag and global VDOM
+- Add `removeProps` and `destroyDOM`
 
-# Chapter 10
-+ handle if chidrens are an array
-+ add fragments
+### Chapter 8: Deep Comparison
+- Add `deepEqual` function
+- Reconcile function components
+- Encapsulate state per component
 
-# Chapter 11
-+ add routes
-+ add navigate
-+ add event listeners
+### Chapter 9: Nested Components
+- Support component composition
+
+### Chapter 10: Array Children & Fragments
+- Handle children as arrays
+- Add support for fragments (`<>...</>`)
+
+### Chapter 11: Routing
+- Add routes
+- Implement `navigate()` and event listeners
+
