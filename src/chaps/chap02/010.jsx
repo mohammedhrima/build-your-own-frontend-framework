@@ -31,4 +31,4 @@ let comp = <div></div>
 console.log(comp)
 
 const root = document.getElementById("root");
-root.innerHTML = "";
+root.innerHTML = ""

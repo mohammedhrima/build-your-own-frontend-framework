@@ -39,5 +39,5 @@ let comp = display(<div></div>)
 console.log(comp)
 
 const root = document.getElementById("root");
-root.innerHTML = "";
+root.innerHTML = ""
 root.appendChild(comp.dom);

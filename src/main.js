@@ -2,89 +2,71 @@ import { arr, obj } from "./data.js";
 
 const lang = document.getElementsByClassName("language-jsx")[0];
 
+let i = 0;
 const JsxFiles = [];
 const JsFiles = [];
 
-// Populate file lists
 arr.forEach(e => {
-  obj[e].forEach(n => {
-    JsxFiles.push(`./src/chaps/${e}/${n}x`);
-    JsFiles.push(`./out/chaps/${e}/${n}`);
-  });
-});
+	console.log(e);
+	obj[e].forEach(n => {
+		JsxFiles.push(`./src/chaps/${e}/${n}x`);
+		JsFiles.push(`./out/chaps/${e}/${n}`);
+	})
+})
 
-console.log("JSX Files:", JsxFiles);
+console.log(JsxFiles);
 
-// Load file at given index
-function open_file(index) {
-  const filename = JsxFiles[index];
-  const jsFile = JsFiles[index];
+function open_file() {
+	window.location.hash = i;
 
-  if (!filename || !jsFile) {
-    console.warn("Invalid index:", index);
-    return;
-  }
+	const filename = JsxFiles[i];
+	const jsFile = JsFiles[i];
 
-  console.log("open file", filename);
-  console.log("JS File:", jsFile);
+	console.log("open file", filename);
+	console.log("JS File:", jsFile);
 
-  // Remove old script
-  const oldScript = document.getElementById("code");
-  if (oldScript) {
-    oldScript.remove();
-  }
+	// Remove old script if it exists
+	const oldScript = document.getElementById("code");
+	if (oldScript) {
+		oldScript.remove();
+	}
 
-  // Load new script
-  const script = document.createElement("script");
-  script.id = "code";
-  script.src = jsFile;
-  script.type = "module";
-  script.onload = () => console.log("Script loaded:", jsFile);
-  script.onerror = () => console.error("Failed to load script:", jsFile);
-  document.body.appendChild(script);
+	// Create new script element
+	const script = document.createElement("script");
+	script.id = "code";
+	script.src = jsFile;
+	script.type = "module"; // Optional: use "module" if you’re importing/exporting
+	script.onload = () => console.log("Script loaded:", jsFile);
+	script.onerror = () => console.error("Failed to load script:", jsFile);
+	document.body.appendChild(script);
 
-  // Fetch and highlight JSX source
-  fetch(filename)
-    .then(res => {
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.text();
-    })
-    .then(data => {
-      lang.textContent = data;
-      Prism.highlightAll();
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-    });
+	// Fetch and highlight JSX source
+	fetch(filename)
+		.then(res => {
+			if (!res.ok) throw new Error("Network response was not ok");
+			return res.text();
+		})
+		.then(data => {
+			lang.textContent = data;
+			Prism.highlightAll();
+		})
+		.catch(err => {
+			console.error("Fetch error:", err);
+		});
 }
 
-// Read index from location.hash and load file
-function load_from_hash() {
-  const index = parseInt(location.hash.slice(1), 10);
-  if (!isNaN(index)) {
-    open_file(index);
-  } else {
-    location.hash = "0";
-  }
-}
+open_file();
 
-// Event handlers for navigation
 document.getElementById("prev").onclick = () => {
-  let index = parseInt(location.hash.slice(1), 10) || 0;
-  if (index > 0) {
-    location.hash = `${index - 1}`;
-  }
+	if (i > 0) {
+		i--;
+		open_file();
+	}
 };
 
 document.getElementById("next").onclick = () => {
-  let index = parseInt(location.hash.slice(1), 10) || 0;
-  if (index < JsxFiles.length - 1) {
-    location.hash = `${index + 1}`;
-  }
+	if (i < JsxFiles.length - 1) {
+		i++;
+		open_file();
+	}
 };
-
-// Listen to hash change
-window.addEventListener("hashchange", load_from_hash);
-
-// Initial load
-load_from_hash();

@@ -60,7 +60,7 @@ function display(vdom) {
 }
 
 let comp = display(
-    <div className="container">
+    <div class="container">
         <h1>Hello World</h1>
     </div>
 )
@@ -68,5 +68,5 @@ let comp = display(
 console.log(comp)
 
 const root = document.getElementById("root");
-root.innerHTML = "";
+root.innerHTML = ""
 root.appendChild(comp.dom);

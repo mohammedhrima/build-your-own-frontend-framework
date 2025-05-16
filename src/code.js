@@ -28,7 +28,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
     const props = vdom.props || {};
     const style = {};
-    
+
     Object.keys(props).forEach(key => {
         vdom.dom.setAttribute(key, props[key]);
     })
@@ -56,12 +56,17 @@ function display(vdom) {
 }
 
 let comp = display(
-    <div className="container">
+    <div class="container">
         <h1>Hello World</h1>
     </div>
 )
 
 console.log(comp)
 
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+function render()
+{
+    const root = document.getElementById("root");
+    root.appendChild(comp.dom);
+}
+
+render();
