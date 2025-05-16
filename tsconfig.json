@@ -7,10 +7,13 @@
     "rootDir": "src",
     "outDir": "out",
     "jsxFactory": "element",
-    "jsxFragmentFactory": "fragment",
+    // "jsxFragmentFactory": "fragment",
     "allowJs": true,
-    "strict": false
+    "strict": false,
+    "pretty": true,
+    // "removeComments": true,
+    "newLine": "crlf"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "chaps"]
+  "exclude": ["node_modules", "old-chaps", "old-chaps"]
 }

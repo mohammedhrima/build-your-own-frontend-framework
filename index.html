@@ -4,13 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Prism core -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <!-- Prism JSX -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-jsx.min.js"></script>
+  <!-- Additional languages for better JSX/TS support -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
   <title>build your own framework</title>
 </head>
 
 <body>
+  <div id="ide">
+    <pre><code class="language-jsx"></code></pre>
+  </div>
+
   <div id="root"></div>
-  <script src="./out/main.js"></script>
+
+  <div id="move">
+    <button id="prev">previous</button>
+    <button id="next">next</button>
+  </div>
+
 </body>
+<script type="module" src="./out/main.js"></script>
 
 </html>
