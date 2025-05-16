@@ -1,12 +1,13 @@
+#!/bin/bash
 
 new_chap_file() {
-  local dir="./src/chaps/$1"
-  local template="./src/main.js"
+  local dir="./src/chaps/chap04"
+  local template="./src/code.js"
 
   # Ensure the directory exists
   if [ ! -d "$dir" ]; then
     echo "Error: Directory '$dir' does not exist."
-    return 1
+    exist 1
   fi
 
   # Ensure the template file exists
@@ -32,7 +33,10 @@ new_chap_file() {
   cp "$template" "$new_path"
 
   echo "Created: $new_path"
+  return 0
 }
 
-new_chap_file $1
+# Only execute if script is run directly (not sourced)
+mkdir -p ./out/chaps
+new_chap_file
 bash ./script.sh

@@ -51,4 +51,4 @@ generate_chap_index() {
   echo "Generated $output_file with chapter index."
 }
 
-npm run clean && npx tsc --pretty && generate_chap_index
+npm run clean && npx tsc --pretty && generate_chap_index && npx tsc --pretty

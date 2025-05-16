@@ -39,6 +39,10 @@ function createDOM(vdom) {
         case ELEMENT: {
             vdom.dom = document.createElement(vdom.tag);
             setProps(vdom);
+            vdom.children.forEach(child =>{
+                createDOM(child);
+                vdom.dom.appendChild(child.dom)
+            })
             break;
         }
         case TEXT: {
@@ -64,4 +68,5 @@ let comp = display(
 console.log(comp)
 
 const root = document.getElementById("root");
+root.innerHTML = "";
 root.appendChild(comp.dom);

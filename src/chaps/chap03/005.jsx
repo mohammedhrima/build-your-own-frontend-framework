@@ -11,7 +11,6 @@ function check(children) {
             })
         }
         else if (Array.isArray(child)) result.push(...check(child));
-        else result.push(child);
     })
     return result;
 }
@@ -21,14 +20,12 @@ function element(tag, props = {}, ...children) {
         type: ELEMENT,
         tag: tag,
         props: props,
-        children: check(children)
+        children: children
     }
 }
 
 function setProps(vdom) {
     const props = vdom.props || {};
-    const style = {};
-    
     Object.keys(props).forEach(key => {
         vdom.dom.setAttribute(key, props[key]);
     })
@@ -41,12 +38,9 @@ function createDOM(vdom) {
             setProps(vdom);
             break;
         }
-        case TEXT: {
-            vdom.dom = document.createTextNode(vdom.value);
-            break;
-        }
         default:
             throw "Unkonwn type"
+            break;
     }
 }
 
@@ -55,13 +49,10 @@ function display(vdom) {
     return vdom
 }
 
-let comp = display(
-    <div className="container">
-        <h1>Hello World</h1>
-    </div>
-)
+let comp = display(<div className="container"></div>)
 
 console.log(comp)
 
 const root = document.getElementById("root");
+root.innerHTML = "";
 root.appendChild(comp.dom);

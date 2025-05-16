@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm run clean && npx tsc -w --pretty",
-    "clean": "rm -rf ./out/*"
+    "start": "npm run clean && npx tsc --pretty",
+    "clean": "rm -rf ./out/* && mkdir ./out/chaps",
+    "watch": "npx tsc --pretty -w"
   },
   "repository": {
     "type": "git",

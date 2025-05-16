@@ -90,6 +90,7 @@ body {
     padding: 20px;
     line-height: 1.5;
     height: 100%;
+    overflow-y: auto;
 }
 
 pre {

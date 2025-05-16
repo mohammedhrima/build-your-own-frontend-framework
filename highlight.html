@@ -83,9 +83,8 @@
   <script>
     // Force Prism to highlight on load
     document.addEventListener('DOMContentLoaded', function () {
-      Prism.highlightAll();
-    });
-    document.getElementsByClassName("language-jsx")[0].innerHTML = `
+      const codeElement = document.querySelector('.language-jsx');
+      const codeContent = `
 function greet(name) {
   console.log('Hello, ' + name + '!');
   return true;
@@ -101,7 +100,14 @@ const App = () => {
 };
 
 export default App;
-    `
+  `;
+
+      // First set as text content to avoid HTML interpretation
+      codeElement.textContent = codeContent;
+
+      // Then highlight with Prism
+      Prism.highlightElement(codeElement);
+    });
   </script>
 
 </body>
