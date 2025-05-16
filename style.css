@@ -96,7 +96,7 @@ body {
 pre {
     background: #282c34 !important;
     border-radius: 6px;
-    padding: 16px !important;
+    /* padding: 16px !important; */
     tab-size: 2;
     overflow: auto;
 }

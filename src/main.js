@@ -2,40 +2,43 @@ import { arr, obj } from "./data.js";
 
 const lang = document.getElementsByClassName("language-jsx")[0];
 
-let i = 0;
+
 const JsxFiles = [];
 const JsFiles = [];
 
+// Populate file lists
 arr.forEach(e => {
-	console.log(e);
 	obj[e].forEach(n => {
 		JsxFiles.push(`./src/chaps/${e}/${n}x`);
 		JsFiles.push(`./out/chaps/${e}/${n}`);
-	})
-})
+	});
+});
 
-console.log(JsxFiles);
 
-function open_file() {
-	window.location.hash = i;
 
-	const filename = JsxFiles[i];
-	const jsFile = JsFiles[i];
-
-	console.log("open file", filename);
-	console.log("JS File:", jsFile);
-
-	// Remove old script if it exists
+// Load file at given index
+function open_file(index) {
+	const filename = JsxFiles[index];
+	const jsFile = JsFiles[index];
+	
+	
+	
+	// Remove old script
 	const oldScript = document.getElementById("code");
 	if (oldScript) {
 		oldScript.remove();
 	}
-
-	// Create new script element
+	
+	console.clear();
+	console.log("open file", filename);
+	console.log("JS File:", jsFile);
+	// Load new script
+	const root = document.getElementById("root");
+	root.innerHTML = "";
 	const script = document.createElement("script");
 	script.id = "code";
-	script.src = jsFile;
-	script.type = "module"; // Optional: use "module" if you’re importing/exporting
+	script.src = jsFile + "?v=" + Date.now(); 
+	script.type = "module";
 	script.onload = () => console.log("Script loaded:", jsFile);
 	script.onerror = () => console.error("Failed to load script:", jsFile);
 	document.body.appendChild(script);
@@ -55,18 +58,33 @@ function open_file() {
 		});
 }
 
-open_file();
+// Read index from location.hash and load file
+function load_from_hash() {
+	const index = parseInt(location.hash.slice(1), 10);
+	if (!isNaN(index)) {
+		open_file(index);
+	} else {
+		location.hash = "0";
+	}
+}
 
+// Event handlers for navigation
 document.getElementById("prev").onclick = () => {
-	if (i > 0) {
-		i--;
-		open_file();
+	let index = parseInt(location.hash.slice(1), 10) || 0;
+	if (index > 0) {
+		location.hash = `${index - 1}`;
 	}
 };
 
 document.getElementById("next").onclick = () => {
-	if (i < JsxFiles.length - 1) {
-		i++;
-		open_file();
+	let index = parseInt(location.hash.slice(1), 10) || 0;
+	if (index < JsxFiles.length - 1) {
+		location.hash = `${index + 1}`;
 	}
 };
+
+// Listen to hash change
+window.addEventListener("hashchange", load_from_hash);
+
+// Initial load
+load_from_hash();

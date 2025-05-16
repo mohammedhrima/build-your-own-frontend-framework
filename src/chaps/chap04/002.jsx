@@ -70,20 +70,9 @@ function display(vdom) {
 	return vdom
 }
 
-const HandleClique = () => {
-	alert("Cliqued me")
-}
-
 let comp = display(
-	<div className="container" >
+	<div class="container">
 		<h1>Hello World</h1>
-		<button
-			onclick={HandleClique}
-			style={{
-				backgroundColor: "#e2e8f0", cursor: "pointer",
-				padding: "10px 15px", fontSize: "25px", margin: "10px 50px"
-			}}
-		>clique me</button>
 	</div>
 )
 

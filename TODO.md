@@ -29,4 +29,20 @@
 
    4.
       + add event listenners
+      + and styling
 
+   5.
+      + add functional component
+      + add execute function
+      + add state management
+      + add init function
+   
+   6.
+      + add reconciliatiton
+      + add deepEqual
+   
+   7. 
+      + add fragment
+
+   8.
+      + add routing
