@@ -78,6 +78,7 @@ function execute(mode, prev, next = null) {
             break;
     }
 }
+// to save the tree of our root VDOM
 let globalVODM = null;
 function display(vdom) {
     execute(CREATE, vdom);

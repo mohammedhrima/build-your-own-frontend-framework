@@ -18,6 +18,8 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
+// this function will be used to create
+// real DOM from virtual DOM
 function createDOM(vdom) {
 
 }

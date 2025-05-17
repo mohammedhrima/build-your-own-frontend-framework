@@ -81,6 +81,7 @@ const State = (initValue) => {
     };
     return [getter, setter];
 };
+// create our first state
 const [count, setCount] = State(1);
 const HandleClick = () => alert("Hellooo");
 function Component() {

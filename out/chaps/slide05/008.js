@@ -7,6 +7,7 @@ function element(tag, props = {}, ...children) {
         children: children
     };
 }
+// set properties a straight forward function :')
 function setProps(vdom) {
 }
 function createDOM(vdom) {

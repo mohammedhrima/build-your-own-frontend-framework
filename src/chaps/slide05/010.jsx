@@ -35,6 +35,7 @@ function display(vdom) {
 	return vdom
 }
 
+// open browser devTools, and look for div inside #root
 let comp = display(<div class="container"></div>)
 
 console.log(comp)

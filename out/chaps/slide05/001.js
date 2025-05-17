@@ -9,4 +9,5 @@ function element(tag, props = {}, ...children) {
 }
 let comp = element("div", null);
 console.log(comp);
+// time to diplay some DOM
 const root = document.getElementById("root");

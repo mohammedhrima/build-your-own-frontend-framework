@@ -29,6 +29,8 @@ function display(vdom) {
 	return vdom
 }
 
+// call display by given it div component
+// and save the return value in comp
 let comp = display(<div></div>)
 
 console.log(comp)

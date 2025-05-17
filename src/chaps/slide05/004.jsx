@@ -15,6 +15,8 @@ function element(tag, props = {}, ...children) {
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
+			// create and save the DOM object inside dom 
+			// attribute in vdom
 			vdom.dom = document.createElement(vdom.tag);
 			break;
 		}

@@ -17,6 +17,7 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
+	// check if tag is a function
 	if (typeof tag === "function") {
 		try {
 			return tag(props, children);

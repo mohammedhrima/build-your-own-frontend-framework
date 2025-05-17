@@ -177,6 +177,7 @@ const State = (initValue) => {
     };
     return [getter, setter];
 };
+// Bear with me — I’ll explain everything after a few more steps.
 const updateState = () => {
     const newVDOM = view();
     if (vdom !== null)

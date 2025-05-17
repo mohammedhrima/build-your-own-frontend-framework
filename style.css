@@ -31,6 +31,8 @@ body {
     background-color: var(--bg);
 }
 
+
+
 #root {
     background-color: var(--bg);
     flex: 1;
@@ -85,19 +87,29 @@ body {
         }
     }
 }
+
+#ide {
+    /* Existing styles */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /* For Firefox */
+    scrollbar-color: var(--accent) var(--nav);
+    /* For Firefox */
+}
+
+/* For WebKit-based browsers (Chrome, Safari, Edge) */
 #ide::-webkit-scrollbar {
     width: 8px;
 }
 
 #ide::-webkit-scrollbar-track {
-    background: var(--nav); /* same as navbar */
-    border-radius: var(--radius);
+    background: var(--nav);
 }
 
 #ide::-webkit-scrollbar-thumb {
     background-color: var(--accent);
-    border-radius: var(--radius);
-    border: 2px solid var(--nav); /* creates a border around the thumb */
+    border-radius: 8px;
+    border: 2px solid var(--nav);
 }
 
 #ide::-webkit-scrollbar-thumb:hover {
@@ -115,6 +127,73 @@ body {
     line-height: 1.5;
     height: 100%;
     overflow-y: auto;
+}
+
+#slide {
+    background-color: var(--accent-hover);
+    position: absolute;
+    display: none;
+    /* Hidden by default */
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+}
+
+#slide.show {
+    background-color: var(--accent-hover);
+    display: flex;
+    /* Show when .show class is added */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.slide-content {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--nav);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 80vw;
+    text-align: left;
+}
+
+.slide-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+.slide-content p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.slide-content {
+    .bullet-list {
+        text-align: left;
+        margin: 1rem auto;
+        max-width: 700px;
+        padding-left: 1.2rem;
+        color: var(--text-muted);
+    }
+
+    .bullet-list li {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+    }
+
+    pre {
+        background-color: #1e293b;
+        color: var(--text);
+        padding: 1rem;
+        border-radius: var(--radius);
+        text-align: left;
+        overflow-x: auto;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.95rem;
+        margin: 1rem 0;
+    }
 }
 
 pre {

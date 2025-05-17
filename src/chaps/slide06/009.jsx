@@ -38,6 +38,8 @@ function createDOM(vdom) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
 			setProps(vdom);
+			// iterate over children, create them
+			// and append them to parent DOM
 			vdom.children.forEach(child => {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom)

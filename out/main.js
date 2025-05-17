@@ -5,15 +5,19 @@ const JsFiles = [];
 // Populate file lists
 arr.forEach(e => {
     obj[e].forEach(n => {
-        JsxFiles.push({ file: `./src/chaps/${e}/${n.file}x`, scroll: n.scroll, highlight: n.highlight });
+        JsxFiles.push({ file: `./src/chaps/${e}/${n.file}x`, scroll: n.scroll, highlight: n.highlight, isCode: n.isCode });
         JsFiles.push(`./out/chaps/${e}/${n.file}`);
     });
 });
 // Load file at given index
 function open_file(index) {
+    const slide = document.getElementById("slide");
+    slide.innerHTML = "";
+    slide.classList.remove("show");
     const filename = JsxFiles[index].file;
     const scroll = JsxFiles[index].scroll;
     const highlight = JsxFiles[index].highlight;
+    const isCode = JsxFiles[index].isCode;
     const jsFile = JsFiles[index];
     // Remove old script
     const oldScript = document.getElementById("code");
@@ -24,6 +28,7 @@ function open_file(index) {
     console.log("index:", index, "arr: ", arr);
     console.log("open file", filename);
     console.log("JS File:", jsFile);
+    // console.log("test:", JsxFiles[index]);
     // Load new script
     const root = document.getElementById("root");
     root.innerHTML = "";
@@ -34,6 +39,8 @@ function open_file(index) {
     script.onload = () => console.log("Script loaded:", jsFile);
     script.onerror = () => console.error("Failed to load script:", jsFile);
     document.body.appendChild(script);
+    if (!isCode)
+        slide.classList.add("show");
     // Fetch and highlight JSX source
     fetch(filename)
         .then(res => {

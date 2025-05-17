@@ -4,6 +4,7 @@ const TEXT = "text";
 function check(children) {
 	let result = [];
 	children.forEach(child => {
+		// if child is string or a number, let's create text
 		if (["string", "number"].includes(typeof child)) {
 			result.push({
 				type: TEXT,

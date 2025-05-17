@@ -69,14 +69,18 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
+// we will be saving our values in hashmap "states"
 let states = {};
 let index = 1;
 const State = (initValue) => {
     const stateIndex = index++;
     states[stateIndex] = initValue;
+    // getter that return value in current index
     const getter = () => states[stateIndex];
+    // setter that set the value in current index
     const setter = (newValue) => {
         states[stateIndex] = newValue;
+        // everytime the state change we will update the view
         updateView();
     };
     return [getter, setter];

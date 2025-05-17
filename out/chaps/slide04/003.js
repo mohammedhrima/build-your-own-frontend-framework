@@ -7,12 +7,6 @@ function element(tag, props = {}, ...children) {
         children: children
     };
 }
-// this function will be used to create
-// real DOM from virtual DOM
-function createDOM(vdom) {
-}
-function display(vdom) {
-}
 let comp = element("div", null);
 console.log(comp);
-const root = document.getElementById("root");
+// this code will turn into ->

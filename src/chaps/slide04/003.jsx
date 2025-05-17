@@ -5,6 +5,14 @@
 
 
 
+
+
+
+
+
+
+
+
 const ELEMENT = "element";
 
 function element(tag, props = {}, ...children) {
@@ -16,10 +24,8 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
-
 let comp = <div></div>
 
 console.log(comp)
 
-// time to display some DOM
-const root = document.getElementById("root");
+// this code will turn into ->

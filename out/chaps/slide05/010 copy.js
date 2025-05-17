@@ -1,6 +1,4 @@
 const ELEMENT = "element";
-// Let’s start by creating a simple text element and displaying it in the view
-const TEXT = "text";
 function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
@@ -34,5 +32,6 @@ function display(vdom) {
 }
 let comp = display(element("div", { class: "container" }));
 console.log(comp);
+// open browser devTools
 const root = document.getElementById("root");
 root.appendChild(comp.dom);

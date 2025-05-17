@@ -9,6 +9,9 @@ function check(children) {
                 value: child
             });
         }
+        // we have to check if it's an array
+        // because we will need it later
+        // when implementing fragments
         else if (Array.isArray(child))
             result.push(...check(child));
     });

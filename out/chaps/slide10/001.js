@@ -1,5 +1,6 @@
 const ELEMENT = "element";
 const TEXT = "text";
+// macros will be used for reconciliation
 const CREATE = "create";
 const REPLACE = "replace";
 const REMOVE = "remove";

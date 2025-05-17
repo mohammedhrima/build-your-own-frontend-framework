@@ -11,6 +11,7 @@ function check(children) {
         }
         else if (Array.isArray(child))
             result.push(...check(child));
+        // otherwise it's just VDOM child
         else
             result.push(child);
     });

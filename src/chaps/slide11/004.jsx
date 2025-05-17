@@ -186,6 +186,12 @@ const State = (initValue) => {
 	return [getter, setter];
 }
 
+// Until now, we've been declaring state globally.
+// It's time to encapsulate state so that each component
+// manages its own state independently.
+// render function will be taking a callback function
+// that return a JSX component
+// call it, and save the JSX return value in vdom variable
 const render = (callback) => {
 	view = callback;
 	vdom = view();

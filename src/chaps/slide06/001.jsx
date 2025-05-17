@@ -3,6 +3,7 @@
 
 
 const ELEMENT = "element";
+// Let’s start by creating a simple text element and displaying it in the view
 const TEXT = "text";
 
 function element(tag, props = {}, ...children) {

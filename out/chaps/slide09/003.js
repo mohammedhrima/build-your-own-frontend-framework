@@ -69,6 +69,7 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
+// let's create our costume useState
 let states = {};
 let index = 1;
 const State = (initValue) => { };

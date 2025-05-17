@@ -200,6 +200,7 @@ function Component() {
 }
 
 function updateView() {
+	// finally we got rid of document.getElementById("root");
 	let comp = display(<Component />)
 	console.log(comp)
 }

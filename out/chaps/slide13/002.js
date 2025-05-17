@@ -21,13 +21,15 @@ function check(children) {
 }
 function element(tag, props = {}, ...children) {
     if (typeof tag === "function") {
+        let funcTag;
         try {
-            return tag(props, children);
+            funcTag = tag(props, children);
         }
         catch (error) {
             console.error("failed to execute functag", tag);
+            return [];
         }
-        return [];
+        return funcTag;
     }
     return {
         type: ELEMENT,
@@ -35,6 +37,9 @@ function element(tag, props = {}, ...children) {
         props: props,
         children: check(children)
     };
+}
+function fragment(props = {}, ...children) {
+    return children;
 }
 function removeProps(vdom) {
     try {
@@ -94,10 +99,9 @@ function createDOM(vdom) {
             vdom.dom = document.createTextNode(vdom.value);
             break;
         }
-        default: {
-            console.log(vdom);
+        default:
+            console.error(vdom);
             throw "Unkonwn type";
-        }
     }
 }
 function execute(mode, prev, next = null) {
@@ -124,9 +128,45 @@ function execute(mode, prev, next = null) {
             break;
     }
 }
+function deepEqual(a, b) {
+    if (a !== a && b !== b)
+        return true;
+    if (a === b)
+        return true;
+    if (a == null || b == null)
+        return false;
+    if (typeof a !== typeof b)
+        return false;
+    if (Array.isArray(a) && Array.isArray(b)) {
+        if (a.length !== b.length)
+            return false;
+        for (let i = 0; i < a.length; i++) {
+            if (!deepEqual(a[i], b[i]))
+                return false;
+        }
+        return true;
+    }
+    if (a instanceof Date && b instanceof Date)
+        return a.getTime() === b.getTime();
+    if (a instanceof RegExp && b instanceof RegExp)
+        return a.toString() === b.toString();
+    if (typeof a === "function" && typeof b === "function")
+        return a.toString() === b.toString();
+    if (typeof a === "object" && typeof b === "object") {
+        const keysA = Object.keys(a);
+        const keysB = Object.keys(b);
+        if (keysA.length !== keysB.length)
+            return false;
+        for (let key of keysA) {
+            if (!keysB.includes(key) || !deepEqual(a[key], b[key]))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
 function reconciliate(prev, next) {
-    if (prev.type != next.type || prev.tag != next.tag ||
-        (prev.type == TEXT && prev.value != next.value))
+    if (!deepEqual(prev, next))
         return execute(REPLACE, prev, next);
     const prevs = prev.children || [];
     const nexts = next.children || [];
@@ -163,32 +203,64 @@ function display(vdom) {
         reconciliate(globalVODM, vdom);
     return vdom;
 }
-let states = {};
-let index = 1;
-const State = (initValue) => {
-    const stateIndex = index++;
-    states[stateIndex] = initValue;
-    const getter = () => states[stateIndex];
-    const setter = (newValue) => {
-        states[stateIndex] = newValue;
-        updateView();
+function init() {
+    let vdom = null;
+    let view = null;
+    let states = {};
+    let index = 1;
+    const State = (initValue) => {
+        const stateIndex = index++;
+        states[stateIndex] = initValue;
+        const getter = () => states[stateIndex];
+        const setter = (newValue) => {
+            states[stateIndex] = newValue;
+            updateState();
+        };
+        return [getter, setter];
     };
-    return [getter, setter];
-};
-const [count, setCount] = State(1);
-const HandleClick = () => setCount(count() + 1);
+    const updateState = () => {
+        const newVDOM = view();
+        console.log("old vdom", vdom);
+        console.log("new vdom", newVDOM);
+        if (vdom !== null)
+            reconciliate(vdom, newVDOM);
+        else
+            vdom = newVDOM;
+    };
+    const render = (callback) => {
+        view = callback;
+        vdom = view();
+        return vdom;
+    };
+    return { State, render };
+}
+function TodoApp() {
+    const { render, State } = init();
+    const [todos, setTodos] = State([]);
+    const [text, setText] = State("");
+    const toggleTodo = (index) => {
+        const updated = todos().map((todo, i) => i === index ? { ...todo, done: !todo.done } : todo);
+        setTodos(updated);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const input = e.target.task;
+        const value = input.value.trim();
+        if (value) {
+            setTodos([...todos(), { text: value, done: false }]);
+            input.value = "";
+        }
+    };
+    return render(() => (element("form", { class: "todo-app", onsubmit: handleSubmit },
+        element("h1", null, "Minimal TODO App"),
+        element("input", { name: "task", placeholder: "Add a task", value: text() }),
+        element("button", { type: "submit" }, "ADD"),
+        element("ul", null, todos().map((todo, index) => (element("li", { class: todo.done ? "done" : "", onclick: () => toggleTodo(index) }, todo.text)))))));
+}
 function Component() {
-    return (element("root", null,
-        element("div", { class: "container" },
-            element("h1", null,
-                "Hello World [",
-                count(),
-                "]"),
-            element("button", { onclick: HandleClick }, "click me"))));
+    const { render } = init();
+    return render(() => (element("root", null,
+        element(TodoApp, null))));
 }
-function updateView() {
-    // finally we got rid of document.getElementById("root");
-    let comp = display(element(Component, null));
-    console.log(comp);
-}
-updateView();
+let comp = display(element(Component, null));
+console.log(comp);

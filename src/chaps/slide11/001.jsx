@@ -79,6 +79,10 @@ function destroyDOM(vdom) {
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
+			// let's add a costume tag <root></root>
+			// to make our framework cool
+			// this tag will be representing
+			// tag with id #root
 			if (vdom.tag === "root") {
 				vdom.dom = document.getElementById("root");
 			} else {

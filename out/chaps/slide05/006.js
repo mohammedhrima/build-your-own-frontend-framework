@@ -23,6 +23,8 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
+// call display by given it div component
+// and save the return value in comp
 let comp = display(element("div", null));
 console.log(comp);
 const root = document.getElementById("root");

@@ -29,6 +29,7 @@ function setProps(vdom) {
 	const props = vdom.props || {};
 
 	Object.keys(props).forEach((key) => {
+		// let's add event listeners to our DOM
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
