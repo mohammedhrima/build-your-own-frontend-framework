@@ -10,22 +10,11 @@ function element(tag, props = {}, ...children) {
 }
 
 function createDOM(vdom) {
-	switch (vdom.type) {
-		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
-			break;
-		}
-		default: {
-			console.log(vdom);
-			throw "Unkonwn type"
-		}
-			break;
-	}
+
 }
 
-function display(vdom) {
-	createDOM(vdom);
-	return vdom
+function display(vdom) { 
+
 }
 
 let comp = <div></div>

@@ -12,7 +12,6 @@ function element(tag, props = {}, ...children) {
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
 			break;
 		}
 		default: {
@@ -24,13 +23,11 @@ function createDOM(vdom) {
 }
 
 function display(vdom) {
-	createDOM(vdom);
-	return vdom
+
 }
 
-let comp = display(<div></div>)
+let comp = <div></div>
 
 console.log(comp)
 
 const root = document.getElementById("root");
-root.appendChild(comp.dom);

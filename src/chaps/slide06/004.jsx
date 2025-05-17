@@ -51,7 +51,7 @@ function display(vdom) {
 	return vdom
 }
 
-let comp = display(<div className="container"></div>)
+let comp = display(<div class="container"></div>)
 
 console.log(comp)
 

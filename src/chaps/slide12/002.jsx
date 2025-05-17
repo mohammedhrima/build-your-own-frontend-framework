@@ -24,7 +24,7 @@ function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
@@ -209,56 +209,43 @@ function init() {
 }
 
 function Navbar() {
-	const { render, State } = init();
-
-	const [count, setCount] = State(1);
-	const increase = () => setCount(count() + 1);
+	const { render } = init();
 
 	return render(() => (
-		<nav>
-			<h1 >UraJS App</h1>
-			<div >
-				<span >Clicks: {count()}</span>
-				<button onclick={increase}> Tap </button>
-			</div>
+		<nav class="blog-navbar">
+			<h1>MiniBlog</h1>
 		</nav>
 	));
 }
 
 function Body() {
-	const { render, State } = init();
-
-	const [facts, setFacts] = State([
-		"UraJS uses JSX like React.",
-		"State updates trigger virtual DOM diffs.",
-		"It's lightweight and fun to hack on!",
-	]);
-	const [index, setIndex] = State(0);
-
-	const nextFact = () => setIndex((index() + 1) % facts().length);
+	const { render } = init();
 
 	return render(() => (
-		<main>
-			<h2 >Did you know?</h2>
-			<p >{facts()[index()]}</p>
-			<button onclick={nextFact}>Tell me more</button>
+		<main class="blog-body">
+			<article>
+				<h2>Building with Your own Framework</h2>
+				<>
+					<p>
+						This one-page blog shows how you can build and style components
+						from scratch using only a few lines of code.
+					</p>
+				</>
+				<p>
+					You can experiment with components, state, and rendering without
+					heavy dependencies. Ideal for learning or prototyping fast.
+				</p>
+			</article>
 		</main>
 	));
 }
 
 function Footer() {
-	const { render, State } = init();
-
-	const [year] = State(() => new Date().getFullYear());
-	const [clicks, setClicks] = State(0);
-	const click = () => setClicks(clicks() + 1);
+	const { render } = init();
 
 	return render(() => (
-		<footer >
-			<p >© {year()} Your Framework</p>
-			<button onclick={click}>
-				Clicked {clicks()} times just for fun
-			</button>
+		<footer class="blog-footer">
+			<p>© {new Date().getFullYear()} MiniBlog — Built with UraJS</p>
 		</footer>
 	));
 }
@@ -268,14 +255,13 @@ function Component() {
 
 	return render(() => (
 		<root>
-			<Navbar />
-			<>
-				<h1 className="page-title">Welcome </h1>
+			<div class="blog">
+				<Navbar />
 				<Body />
-			</>
-			<Footer />
+				<Footer />
+			</div>
 		</root>
-	))
+	));
 }
 
 let comp = display(<Component />)

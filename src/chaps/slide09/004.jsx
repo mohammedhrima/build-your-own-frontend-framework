@@ -1,10 +1,6 @@
 const ELEMENT = "element";
 const TEXT = "text";
 
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
-
 function check(children) {
 	let result = [];
 	children.forEach(child => {
@@ -22,15 +18,12 @@ function check(children) {
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
-		let funcTag;
 		try {
-			funcTag = tag(props);
+			return tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
-			return [];
 		}
-
-		return funcTag;
+		return [];
 	}
 	return {
 		type: ELEMENT,
@@ -39,25 +32,6 @@ function element(tag, props = {}, ...children) {
 		children: check(children)
 	}
 }
-
-function removeProps(vdom) {
-	try {
-		const props = vdom.props;
-		for (const key of Object.keys(props || {})) {
-			if (vdom.dom) {
-				if (key.startsWith("on")) {
-					const eventType = key.slice(2).toLowerCase();
-					vdom.dom?.removeEventListener(eventType, props[key]);
-				} else if (vdom.dom) {
-					vdom.dom?.removeAttribute(key);
-				}
-			} else delete props[key];
-		}
-		vdom.props = {};
-	} catch (error) {
-	}
-}
-
 
 function setProps(vdom) {
 	const props = vdom.props || {};
@@ -70,13 +44,6 @@ function setProps(vdom) {
 		else vdom.dom.setAttribute(key, props[key]);
 	});
 
-}
-
-function destroyDOM(vdom) {
-	removeProps(vdom);
-	vdom.dom?.remove();
-	vdom.dom = null;
-	vdom.children?.map(destroyDOM);
 }
 
 function createDOM(vdom) {
@@ -101,41 +68,8 @@ function createDOM(vdom) {
 	}
 }
 
-function execute(mode, prev, next = null) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(prev);
-			break;
-		}
-		case REMOVE: {
-			destroyDOM(prev);
-			break;
-		}
-		case REPLACE: {
-			removeProps(prev);
-			execute(CREATE, next);
-
-			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
-
-			prev.dom = next.dom;
-			prev.children = next.children;
-			prev.props = next.props;
-			break;
-		}
-		default:
-			break;
-	}
-}
-
-function reconciliate(prev, next) { }
-
-let globalVODM = null;
 function display(vdom) {
-	if (!globalVODM) {
-		execute(CREATE, vdom);
-		globalVODM = vdom;
-	}
-	else reconciliate(globalVODM, vdom);
+	createDOM(vdom);
 	return vdom
 }
 
@@ -153,14 +87,12 @@ const State = (initValue) => {
 	return [getter, setter];
 }
 
-const [count, setCount] = State(1);
-
-const HandleClick = () => setCount(count() + 1)
+const HandleClick = () => alert("Hellooo")
 
 function Component() {
 	return (
-		<div className="container" >
-			<h1>Hello World [{count()}]</h1>
+		<div class="container" >
+			<h1>Hello World</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>
 	)

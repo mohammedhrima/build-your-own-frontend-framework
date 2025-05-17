@@ -22,12 +22,15 @@ function check(children) {
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
+		let funcTag;
 		try {
-			return tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
+			return [];
 		}
-		return [];
+
+		return funcTag;
 	}
 	return {
 		type: ELEMENT,
@@ -72,8 +75,19 @@ function createDOM(vdom) {
 	}
 }
 
+function execute(mode, prev, next = null) {
+	switch (mode) {
+		case CREATE: {
+			createDOM(prev);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
 function display(vdom) {
-	createDOM(vdom);
+	execute(CREATE, vdom);
 	return vdom
 }
 
@@ -97,7 +111,7 @@ const HandleClick = () => setCount(count() + 1)
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World [{count()}]</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>

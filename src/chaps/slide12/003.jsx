@@ -24,12 +24,11 @@ function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
 		}
-
 		return funcTag;
 	}
 	return {
@@ -38,6 +37,10 @@ function element(tag, props = {}, ...children) {
 		props: props,
 		children: check(children)
 	}
+}
+
+function fragment(props = {}, ...children) {
+	return children;
 }
 
 function removeProps(vdom) {
@@ -80,9 +83,14 @@ function destroyDOM(vdom) {
 }
 
 function createDOM(vdom) {
+
 	switch (vdom.type) {
 		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
+			if (vdom.tag === "root") {
+				vdom.dom = document.getElementById("root");
+			} else {
+				vdom.dom = document.createElement(vdom.tag);
+			}
 			setProps(vdom);
 			vdom.children.forEach(child => {
 				createDOM(child);
@@ -94,10 +102,9 @@ function createDOM(vdom) {
 			vdom.dom = document.createTextNode(vdom.value);
 			break;
 		}
-		default: {
-			console.log(vdom);
+		default:
+			console.error(vdom)
 			throw "Unkonwn type"
-		}
 	}
 }
 
@@ -127,9 +134,35 @@ function execute(mode, prev, next = null) {
 	}
 }
 
+function deepEqual(a, b) {
+	if (a !== a && b !== b) return true;
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (typeof a !== typeof b) return false;
+	if (Array.isArray(a) && Array.isArray(b)) {
+		if (a.length !== b.length) return false;
+		for (let i = 0; i < a.length; i++) {
+			if (!deepEqual(a[i], b[i])) return false;
+		}
+		return true;
+	}
+	if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+	if (a instanceof RegExp && b instanceof RegExp) return a.toString() === b.toString();
+	if (typeof a === "function" && typeof b === "function") return a.toString() === b.toString();
+	if (typeof a === "object" && typeof b === "object") {
+		const keysA = Object.keys(a);
+		const keysB = Object.keys(b);
+		if (keysA.length !== keysB.length) return false;
+		for (let key of keysA) {
+			if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+		}
+		return true;
+	}
+	return false;
+}
+
 function reconciliate(prev, next) {
-	if (prev.type != next.type || prev.tag != next.tag ||
-		(prev.type == TEXT && prev.value != next.value))
+	if (!deepEqual(prev, next))
 		return execute(REPLACE, prev, next);
 
 	const prevs = prev.children || [];
@@ -167,39 +200,94 @@ function display(vdom) {
 	return vdom
 }
 
-let states = {};
-let index = 1;
-const State = (initValue) => {
-	const stateIndex = index++;
-	states[stateIndex] = initValue;
+function init() {
+	let vdom = null;
+	let view = null;
+	let states = {};
+	let index = 1;
 
-	const getter = () => states[stateIndex];
-	const setter = (newValue) => {
-		states[stateIndex] = newValue;
-		updateView();
+	const State = (initValue) => {
+		const stateIndex = index++;
+		states[stateIndex] = initValue;
+
+		const getter = () => states[stateIndex];
+		const setter = (newValue) => {
+			states[stateIndex] = newValue;
+			updateState();
+		}
+		return [getter, setter];
 	}
-	return [getter, setter];
+
+	const updateState = () => {
+		const newVDOM = view();
+		if (vdom !== null) reconciliate(vdom, newVDOM);
+		else vdom = newVDOM;
+	};
+
+	const render = (callback) => {
+		view = callback;
+		vdom = view();
+		return vdom;
+	}
+
+	return { State, render };
 }
 
-const [count, setCount] = State(1);
+function Navbar() {
+	const { render } = init();
 
-const HandleClick = () => setCount(count() + 1)
+	return render(() => (
+		<nav class="blog-navbar">
+			<h1>MiniBlog</h1>
+		</nav>
+	));
+}
+
+function Body() {
+	const { render } = init();
+
+	return render(() => (
+		<main class="blog-body">
+			<article>
+				<h2>Building with Your own Framework</h2>
+				<>
+					<p>
+						This one-page blog shows how you can build and style components
+						from scratch using only a few lines of code.
+					</p>
+				</>
+				<p>
+					You can experiment with components, state, and rendering without
+					heavy dependencies. Ideal for learning or prototyping fast.
+				</p>
+			</article>
+		</main>
+	));
+}
+
+function Footer() {
+	const { render } = init();
+
+	return render(() => (
+		<footer class="blog-footer">
+			<p>© {new Date().getFullYear()} MiniBlog — Built with UraJS</p>
+		</footer>
+	));
+}
 
 function Component() {
-	return (
-		<div className="container" >
-			<h1>Hello World [{count()}]</h1>
-			<button onclick={HandleClick}>click me</button>
-		</div>
-	)
+	const { render } = init();
+
+	return render(() => (
+		<root>
+			<div class="blog">
+				<Navbar />
+				<Body />
+				<Footer />
+			</div>
+		</root>
+	));
 }
 
-function updateView() {
-	let comp = display(<Component />)
-	console.log(comp)
-	const root = document.getElementById("root");
-	root.innerHTML = ""
-	root.appendChild(comp.dom);
-}
-
-updateView();
+let comp = display(<Component />)
+console.log(comp)

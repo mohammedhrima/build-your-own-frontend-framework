@@ -24,7 +24,7 @@ function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
@@ -205,19 +205,18 @@ function init() {
 	return { State, render };
 }
 
-function Navbar() {
-	const { render, State } = init();
 
-	const [count, setCount] = State(1);
-	const increase = () => setCount(count() + 1);
+function Navbar() {
+	const { render } = init();
 
 	return render(() => (
-		<nav>
-			<h1 >UraJS App</h1>
-			<div >
-				<span >Clicks: {count()}</span>
-				<button onclick={increase}> Tap </button>
-			</div>
+		<nav class="blog-navbar">
+			<h1>MiniBlog</h1>
+			<ul>
+				<li><a >Home</a></li>
+				<li><a >Articles</a></li>
+				<li><a >About</a></li>
+			</ul>
 		</nav>
 	));
 }
@@ -225,37 +224,30 @@ function Navbar() {
 function Body() {
 	const { render, State } = init();
 
-	const [facts, setFacts] = State([
-		"UraJS uses JSX like React.",
-		"State updates trigger virtual DOM diffs.",
-		"It's lightweight and fun to hack on!",
+	const [posts] = State([
+		{ title: "Welcome to MiniBlog", content: "This is a tiny blog built with UraJS." },
+		{ title: "How it works", content: "It uses a virtual DOM and JSX for updates." },
+		{ title: "Why minimal?", content: "To help you learn by building from scratch!" },
 	]);
-	const [index, setIndex] = State(0);
-
-	const nextFact = () => setIndex((index() + 1) % facts().length);
 
 	return render(() => (
-		<main>
-			<h2 >Did you know?</h2>
-			<p >{facts()[index()]}</p>
-			<button onclick={nextFact}>Tell me more</button>
+		<main class="blog-body">
+			{posts().map(post => (
+				<article>
+					<h2>{post.title}</h2>
+					<p>{post.content}</p>
+				</article>
+			))}
 		</main>
 	));
 }
 
 function Footer() {
-	const { render, State } = init();
-
-	const [year] = State(() => new Date().getFullYear());
-	const [clicks, setClicks] = State(0);
-	const click = () => setClicks(clicks() + 1);
+	const { render } = init();
 
 	return render(() => (
-		<footer >
-			<p >© {year()} Your Framework</p>
-			<button onclick={click}>
-				Clicked {clicks()} times just for fun
-			</button>
+		<footer class="blog-footer">
+			<p>© {new Date().getFullYear()} MiniBlog</p>
 		</footer>
 	));
 }
@@ -269,7 +261,7 @@ function Component() {
 			<Body />
 			<Footer />
 		</root>
-	))
+	));
 }
 
 let comp = display(<Component />)

@@ -68,7 +68,7 @@ const HandleClick = () => alert("Hellooo")
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>
@@ -76,7 +76,7 @@ function Component() {
 }
 
 let comp = display(
-	<div className="container" >
+	<div class="container" >
 		<h1>Hello World</h1>
 		<button onclick={HandleClick}>click me</button>
 	</div>

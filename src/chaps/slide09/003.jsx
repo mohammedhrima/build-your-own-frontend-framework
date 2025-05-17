@@ -17,6 +17,14 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
+	if (typeof tag === "function") {
+        try {
+            return tag(props, children);
+        } catch (error) {
+            console.error("failed to execute functag", tag);
+        }
+		return [];
+	}
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -35,6 +43,7 @@ function setProps(vdom) {
 		}
 		else vdom.dom.setAttribute(key, props[key]);
 	});
+
 }
 
 function createDOM(vdom) {
@@ -64,16 +73,28 @@ function display(vdom) {
 	return vdom
 }
 
+let states = {};
+let index = 1;
+const State = (initValue) =>{}
+
 const HandleClick = () => alert("Hellooo")
 
-let comp = display(
-	<div class="container" >
-		<h1>Hello World</h1>
-		<button onclick={HandleClick}>click me</button>
-	</div>
-)
+function Component() {
+	return (
+		<div class="container" >
+			<h1>Hello World</h1>
+			<button onclick={HandleClick}>click me</button>
+		</div>
+	)
+}
 
-console.log(comp)
+function updateView()
+{
+	let comp = display(<Component/>)
+	console.log(comp)
+	const root = document.getElementById("root");
+	root.innerHTML = ""
+	root.appendChild(comp.dom);
+}
 
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+updateView();

@@ -24,7 +24,7 @@ function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		let funcTag;
 		try {
-			funcTag = tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 			return [];
@@ -86,9 +86,15 @@ function execute(mode, prev, next = null) {
 	}
 }
 
+function reconciliate(prev, next) { }
+
 let globalVODM = null;
 function display(vdom) {
-	execute(CREATE, vdom);
+	if (!globalVODM) {
+		execute(CREATE, vdom);
+		globalVODM = vdom;
+	}
+	else reconciliate(globalVODM, vdom);
 	return vdom
 }
 
@@ -112,7 +118,7 @@ const HandleClick = () => setCount(count() + 1)
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World [{count()}]</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>

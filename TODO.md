@@ -75,6 +75,7 @@
    + add REMOVE, REPLACE in execute
    + implement reconciliate for text node
    + reconcilate children
+   + add deepEqual
 
 + Slide 11: add root tag, resuasble Components
    + add root tag
@@ -87,7 +88,7 @@
    + init return an object with two keys, render and State
    + reusable components example
 
-+ Slide 12: add fragments
-   + fragment exmaple
++ Slide 12: add fragments, and deepequal
+   + fragment example
 
 + Slide 13: final result

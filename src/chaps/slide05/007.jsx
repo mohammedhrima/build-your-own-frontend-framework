@@ -24,11 +24,13 @@ function createDOM(vdom) {
 }
 
 function display(vdom) {
-
+	createDOM(vdom);
+	return vdom
 }
 
-let comp = <div></div>
+let comp = display(<div></div>)
 
 console.log(comp)
 
 const root = document.getElementById("root");
+root.appendChild(comp.dom);

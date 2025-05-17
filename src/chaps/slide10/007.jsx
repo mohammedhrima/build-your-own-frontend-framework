@@ -1,6 +1,10 @@
 const ELEMENT = "element";
 const TEXT = "text";
 
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
+
 function check(children) {
 	let result = [];
 	children.forEach(child => {
@@ -18,12 +22,15 @@ function check(children) {
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
+		let funcTag;
 		try {
-			return tag(props);
+			funcTag = tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
+			return [];
 		}
-		return [];
+
+		return funcTag;
 	}
 	return {
 		type: ELEMENT,
@@ -32,6 +39,30 @@ function element(tag, props = {}, ...children) {
 		children: check(children)
 	}
 }
+
+function removeProps(vdom) {
+    try {
+        const props = vdom.props;
+        for (const key of Object.keys(props || {})) {
+            if (key == "func") continue;
+            if (vdom.dom) {
+                if (key.startsWith("on")) {
+                    const eventType = key.slice(2).toLowerCase();
+                    vdom.dom?.removeEventListener(eventType, props[key]);
+                } else if (key === "style") {
+                    Object.keys(props.style || {}).forEach((styleProp) => {
+                        vdom.dom.style[styleProp] = "";
+                    });
+                } else if (vdom.dom) {
+                    vdom.dom?.removeAttribute(key);
+                }
+            } else delete props[key];
+        }
+        vdom.props = {};
+    } catch (error) {
+    }
+}
+
 
 function setProps(vdom) {
 	const props = vdom.props || {};
@@ -43,6 +74,14 @@ function setProps(vdom) {
 		}
 		else vdom.dom.setAttribute(key, props[key]);
 	});
+
+}
+
+function destroyDOM(vdom) {
+    removeProps(vdom);
+    vdom.dom?.remove();
+    vdom.dom = null;
+    vdom.children?.map(destroyDOM);
 }
 
 function createDOM(vdom) {
@@ -67,8 +106,26 @@ function createDOM(vdom) {
 	}
 }
 
+function execute(mode, prev, next = null) {
+	switch (mode) {
+		case CREATE: {
+			createDOM(prev);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+function reconciliate(prev, next) {}
+
+let globalVODM = null;
 function display(vdom) {
-	createDOM(vdom);
+	if (!globalVODM) {
+		execute(CREATE, vdom);
+		globalVODM = vdom;
+	}
+	else reconciliate(globalVODM, vdom);
 	return vdom
 }
 
@@ -92,9 +149,9 @@ const HandleClick = () => setCount(count() + 1)
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World [{count()}]</h1>
-			<button onclick={HandleClick}>click me</button>
+<button onclick={HandleClick}>click me</button>
 		</div>
 	)
 }

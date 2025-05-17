@@ -17,9 +17,9 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
-	if (typeof tag === "function") {
+		if (typeof tag === "function") {
         try {
-            return tag(props);
+            return tag(props, children);
         } catch (error) {
             console.error("failed to execute functag", tag);
         }
@@ -73,15 +73,11 @@ function display(vdom) {
 	return vdom
 }
 
-let states = {};
-let index = 1;
-const State = (initValue) =>{}
-
 const HandleClick = () => alert("Hellooo")
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>

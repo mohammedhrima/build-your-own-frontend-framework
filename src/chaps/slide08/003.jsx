@@ -17,6 +17,14 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
+		if (typeof tag === "function") {
+        try {
+            return tag(props, children);
+        } catch (error) {
+            console.error("failed to execute functag", tag);
+        }
+		return [];
+	}
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -69,7 +77,7 @@ const HandleClick = () => alert("Hellooo")
 
 function Component() {
 	return (
-		<div className="container" >
+		<div class="container" >
 			<h1>Hello World</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>

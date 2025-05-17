@@ -19,7 +19,7 @@ function check(children) {
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
 		try {
-			return tag(props);
+			return tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
 		}
@@ -43,7 +43,6 @@ function setProps(vdom) {
 		}
 		else vdom.dom.setAttribute(key, props[key]);
 	});
-
 }
 
 function createDOM(vdom) {
@@ -87,12 +86,14 @@ const State = (initValue) => {
 	return [getter, setter];
 }
 
-const HandleClick = () => alert("Hellooo")
+const [count, setCount] = State(1);
+
+const HandleClick = () => setCount(count() + 1)
 
 function Component() {
 	return (
-		<div className="container" >
-			<h1>Hello World</h1>
+		<div class="container" >
+			<h1>Hello World [{count()}]</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>
 	)
