@@ -231,10 +231,12 @@ function Body() {
 						from scratch using only a few lines of code.
 					</p>
 				</>
-				<p>
-					You can experiment with components, state, and rendering without
-					heavy dependencies. Ideal for learning or prototyping fast.
-				</p>
+				<>
+					<p>
+						You can experiment with components, state, and rendering without
+						heavy dependencies. Ideal for learning or prototyping fast.
+					</p>
+				</>
 			</article>
 		</main>
 	));
@@ -245,7 +247,7 @@ function Footer() {
 
 	return render(() => (
 		<footer class="blog-footer">
-			<p>© {new Date().getFullYear()} MiniBlog — Built with UraJS</p>
+			<p>© {new Date().getFullYear()} MiniBlog</p>
 		</footer>
 	));
 }

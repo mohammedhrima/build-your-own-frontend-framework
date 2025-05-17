@@ -205,39 +205,32 @@ function init() {
 	return { State, render };
 }
 
-
 function Navbar() {
 	const { render } = init();
 
 	return render(() => (
 		<nav class="blog-navbar">
 			<h1>MiniBlog</h1>
-			<ul>
-				<li><a >Home</a></li>
-				<li><a >Articles</a></li>
-				<li><a >About</a></li>
-			</ul>
 		</nav>
 	));
 }
 
 function Body() {
-	const { render, State } = init();
-
-	const [posts] = State([
-		{ title: "Welcome to MiniBlog", content: "This is a tiny blog built with UraJS." },
-		{ title: "How it works", content: "It uses a virtual DOM and JSX for updates." },
-		{ title: "Why minimal?", content: "To help you learn by building from scratch!" },
-	]);
+	const { render } = init();
 
 	return render(() => (
 		<main class="blog-body">
-			{posts().map(post => (
-				<article>
-					<h2>{post.title}</h2>
-					<p>{post.content}</p>
-				</article>
-			))}
+			<article>
+				<h2>Building with Your own Framework</h2>
+				<p>
+					This one-page blog shows how you can build and style components
+					from scratch using only a few lines of code.
+				</p>
+				<p>
+					You can experiment with components, state, and rendering without
+					heavy dependencies. Ideal for learning or prototyping fast.
+				</p>
+			</article>
 		</main>
 	));
 }
@@ -257,9 +250,11 @@ function Component() {
 
 	return render(() => (
 		<root>
-			<Navbar />
-			<Body />
-			<Footer />
+			<div class="blog">
+				<Navbar />
+				<Body />
+				<Footer />
+			</div>
 		</root>
 	));
 }

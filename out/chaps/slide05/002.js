@@ -1,0 +1,16 @@
+const ELEMENT = "element";
+function element(tag, props = {}, ...children) {
+    return {
+        type: ELEMENT,
+        tag: tag,
+        props: props,
+        children: children
+    };
+}
+function createDOM(vdom) {
+}
+function display(vdom) {
+}
+let comp = element("div", null);
+console.log(comp);
+const root = document.getElementById("root");
