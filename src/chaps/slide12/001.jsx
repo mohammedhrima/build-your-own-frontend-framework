@@ -29,7 +29,6 @@ function element(tag, props = {}, ...children) {
 			console.error("failed to execute functag", tag);
 			return [];
 		}
-
 		return funcTag;
 	}
 	return {
@@ -40,9 +39,6 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
-function fragment(props = {}, ...children) {
-	return children;
-}
 
 function removeProps(vdom) {
 	try {
@@ -270,10 +266,7 @@ function Component() {
 	return render(() => (
 		<root>
 			<Navbar />
-			<>
-				<h1 className="page-title">Welcome </h1>
-				<Body />
-			</>
+			<Body />
 			<Footer />
 		</root>
 	))

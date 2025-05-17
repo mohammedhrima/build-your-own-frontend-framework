@@ -29,7 +29,6 @@ function element(tag, props = {}, ...children) {
 			console.error("failed to execute functag", tag);
 			return [];
 		}
-
 		return funcTag;
 	}
 	return {

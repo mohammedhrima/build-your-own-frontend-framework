@@ -40,10 +40,6 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
-function fragment(props = {}, ...children) {
-	return children;
-}
-
 function removeProps(vdom) {
 	try {
 		const props = vdom.props;
@@ -84,14 +80,9 @@ function destroyDOM(vdom) {
 }
 
 function createDOM(vdom) {
-
 	switch (vdom.type) {
 		case ELEMENT: {
-			if (vdom.tag === "root") {
-				vdom.dom = document.getElementById("root");
-			} else {
-				vdom.dom = document.createElement(vdom.tag);
-			}
+			vdom.dom = document.createElement(vdom.tag);
 			setProps(vdom);
 			vdom.children.forEach(child => {
 				createDOM(child);
@@ -103,9 +94,10 @@ function createDOM(vdom) {
 			vdom.dom = document.createTextNode(vdom.value);
 			break;
 		}
-		default:
-			console.error(vdom)
+		default: {
+			console.log(vdom);
 			throw "Unkonwn type"
+		}
 	}
 }
 
@@ -165,7 +157,6 @@ function reconciliate(prev, next) {
 	}
 }
 
-
 let globalVODM = null;
 function display(vdom) {
 	if (!globalVODM) {
@@ -176,108 +167,39 @@ function display(vdom) {
 	return vdom
 }
 
-function init() {
-	let vdom = null;
-	let view = null;
-	let states = {};
-	let index = 1;
+let states = {};
+let index = 1;
+const State = (initValue) => {
+	const stateIndex = index++;
+	states[stateIndex] = initValue;
 
-	const State = (initValue) => {
-		const stateIndex = index++;
-		states[stateIndex] = initValue;
-
-		const getter = () => states[stateIndex];
-		const setter = (newValue) => {
-			states[stateIndex] = newValue;
-			updateState();
-		}
-		return [getter, setter];
+	const getter = () => states[stateIndex];
+	const setter = (newValue) => {
+		states[stateIndex] = newValue;
+		updateView();
 	}
-
-	const updateState = () => {
-		const newVDOM = view();
-		if (vdom !== null) reconciliate(vdom, newVDOM);
-		else vdom = newVDOM;
-	};
-
-	const render = (callback) => {
-		view = callback;
-		vdom = view();
-		return vdom;
-	}
-
-	return { State, render };
+	return [getter, setter];
 }
 
-function Navbar() {
-	const { render, State } = init();
+const [count, setCount] = State(1);
 
-	const [count, setCount] = State(1);
-	const increase = () => setCount(count() + 1);
-
-	return render(() => (
-		<nav>
-			<h1 >UraJS App</h1>
-			<div >
-				<span >Clicks: {count()}</span>
-				<button onclick={increase}> Tap </button>
-			</div>
-		</nav>
-	));
-}
-
-function Body() {
-	const { render, State } = init();
-
-	const [facts, setFacts] = State([
-		"UraJS uses JSX like React.",
-		"State updates trigger virtual DOM diffs.",
-		"It's lightweight and fun to hack on!",
-	]);
-	const [index, setIndex] = State(0);
-
-	const nextFact = () => setIndex((index() + 1) % facts().length);
-
-	return render(() => (
-		<main>
-			<h2 >Did you know?</h2>
-			<p >{facts()[index()]}</p>
-			<button onclick={nextFact}>Tell me more</button>
-		</main>
-	));
-}
-
-function Footer() {
-	const { render, State } = init();
-
-	const [year] = State(() => new Date().getFullYear());
-	const [clicks, setClicks] = State(0);
-	const click = () => setClicks(clicks() + 1);
-
-	return render(() => (
-		<footer >
-			<p >© {year()} Your Framework</p>
-			<button onclick={click}>
-				Clicked {clicks()} times just for fun
-			</button>
-		</footer>
-	));
-}
+const HandleClick = () => setCount(count() + 1)
 
 function Component() {
-	const { render } = init();
-
-	return render(() => (
-		<root>
-			<Navbar />
-			<>
-				<h1 className="page-title">Welcome </h1>
-				<Body />
-			</>
-			<Footer />
-		</root>
-	))
+	return (
+		<div className="container" >
+			<h1>Hello World [{count()}]</h1>
+			<button onclick={HandleClick}>click me</button>
+		</div>
+	)
 }
 
-let comp = display(<Component />)
-console.log(comp)
+function updateView() {
+	let comp = display(<Component />)
+	console.log(comp)
+	const root = document.getElementById("root");
+	root.innerHTML = ""
+	root.appendChild(comp.dom);
+}
+
+updateView();
