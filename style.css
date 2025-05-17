@@ -101,7 +101,7 @@ pre {
     background: #282c34 !important;
     border-radius: 6px;
     /* padding: 16px !important; */
-    tab-size: 2;
+    tab-size: 3;
     overflow: auto;
 }
 
@@ -140,6 +140,12 @@ code {
 
 .token.attr-value {
     color: #98c379;
+}
+
+.highlighted {
+    color: #facc15 !important;
+    /* font-size: 16px; */
+    font-weight: bold !important;
 }
 
 .container {

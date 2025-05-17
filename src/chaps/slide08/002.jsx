@@ -17,6 +17,14 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
+	if (typeof tag === "function") {
+		try {
+			return tag(props, children);
+		} catch (error) {
+			console.error("failed to execute functag", tag);
+		}
+		return [];
+	}
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -28,7 +36,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
 	const props = vdom.props || {};
 
-	Object.keys(props || {}).forEach((key) => {
+	Object.keys(props).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
@@ -67,16 +75,12 @@ function display(vdom) {
 
 const HandleClick = () => alert("Hellooo")
 
-function Component() {
-	return (
-		<div class="container" >
-			<h1>Hello World</h1>
-			<button onclick={HandleClick}>click me</button>
-		</div>
-	)
-}
-
-let comp = display(<Component/>)
+let comp = display(
+	<div class="container" >
+		<h1>Hello World</h1>
+		<button onclick={HandleClick}>click me</button>
+	</div>
+)
 
 console.log(comp)
 

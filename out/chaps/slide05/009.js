@@ -20,19 +20,17 @@ function createDOM(vdom) {
             setProps(vdom);
             break;
         }
-        default:
-            {
-                console.log(vdom);
-                throw "Unkonwn type";
-            }
-            break;
+        default: {
+            console.log(vdom);
+            throw "Unkonwn type";
+        }
     }
 }
 function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
-let comp = display(element("div", { class: "container" }));
+let comp = display(element("div", null));
 console.log(comp);
 const root = document.getElementById("root");
 root.appendChild(comp.dom);

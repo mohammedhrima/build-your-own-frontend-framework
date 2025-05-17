@@ -1,5 +1,8 @@
 const ELEMENT = "element";
 const TEXT = "text";
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
 function check(children) {
     let result = [];
     children.forEach(child => {
@@ -17,6 +20,15 @@ function check(children) {
     return result;
 }
 function element(tag, props = {}, ...children) {
+    if (typeof tag === "function") {
+        try {
+            return tag(props, children);
+        }
+        catch (error) {
+            console.error("failed to execute functag", tag);
+        }
+        return [];
+    }
     return {
         type: ELEMENT,
         tag: tag,
@@ -56,12 +68,39 @@ function createDOM(vdom) {
         }
     }
 }
+function execute(mode, prev, next = null) {
+}
 function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
-let comp = display(element("div", { class: "container" },
-    element("h1", null, "Hello World")));
-console.log(comp);
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+let states = {};
+let index = 1;
+const State = (initValue) => {
+    const stateIndex = index++;
+    states[stateIndex] = initValue;
+    const getter = () => states[stateIndex];
+    const setter = (newValue) => {
+        states[stateIndex] = newValue;
+        updateView();
+    };
+    return [getter, setter];
+};
+const [count, setCount] = State(1);
+const HandleClick = () => setCount(count() + 1);
+function Component() {
+    return (element("div", { class: "container" },
+        element("h1", null,
+            "Hello World [",
+            count(),
+            "]"),
+        element("button", { onclick: HandleClick }, "click me")));
+}
+function updateView() {
+    let comp = display(element(Component, null));
+    console.log(comp);
+    const root = document.getElementById("root");
+    root.innerHTML = "";
+    root.appendChild(comp.dom);
+}
+updateView();

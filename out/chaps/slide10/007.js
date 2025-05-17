@@ -21,15 +21,13 @@ function check(children) {
 }
 function element(tag, props = {}, ...children) {
     if (typeof tag === "function") {
-        let funcTag;
         try {
-            funcTag = tag(props, children);
+            return tag(props, children);
         }
         catch (error) {
             console.error("failed to execute functag", tag);
-            return [];
         }
-        return funcTag;
+        return [];
     }
     return {
         type: ELEMENT,
@@ -68,7 +66,7 @@ function removeProps(vdom) {
 }
 function setProps(vdom) {
     const props = vdom.props || {};
-    Object.keys(props || {}).forEach((key) => {
+    Object.keys(props).forEach((key) => {
         if (key.startsWith("on")) {
             const eventType = key.slice(2).toLowerCase();
             vdom.dom.addEventListener(eventType, props[key]);

@@ -17,6 +17,15 @@ function check(children) {
     return result;
 }
 function element(tag, props = {}, ...children) {
+    if (typeof tag === "function") {
+        try {
+            return tag(props, children);
+        }
+        catch (error) {
+            console.error("failed to execute functag", tag);
+        }
+        return [];
+    }
     return {
         type: ELEMENT,
         tag: tag,
@@ -26,7 +35,7 @@ function element(tag, props = {}, ...children) {
 }
 function setProps(vdom) {
     const props = vdom.props || {};
-    Object.keys(props || {}).forEach((key) => {
+    Object.keys(props).forEach((key) => {
         if (key.startsWith("on")) {
             const eventType = key.slice(2).toLowerCase();
             vdom.dom.addEventListener(eventType, props[key]);
@@ -61,12 +70,9 @@ function display(vdom) {
     return vdom;
 }
 const HandleClick = () => alert("Hellooo");
-function Component() {
-    return (element("div", { class: "container" },
-        element("h1", null, "Hello World"),
-        element("button", { onclick: HandleClick }, "click me")));
-}
-let comp = display(element(Component, null));
+let comp = display(element("div", { class: "container" },
+    element("h1", null, "Hello World"),
+    element("button", { onclick: HandleClick }, "click me")));
 console.log(comp);
 const root = document.getElementById("root");
 root.appendChild(comp.dom);

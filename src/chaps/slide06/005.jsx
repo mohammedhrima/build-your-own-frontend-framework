@@ -43,7 +43,6 @@ function createDOM(vdom) {
 			console.log(vdom);
 			throw "Unkonwn type"
 		}
-			break;
 	}
 }
 

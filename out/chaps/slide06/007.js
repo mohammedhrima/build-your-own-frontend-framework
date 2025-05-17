@@ -37,12 +37,10 @@ function createDOM(vdom) {
             setProps(vdom);
             break;
         }
-        default:
-            {
-                console.log(vdom);
-                throw "Unkonwn type";
-            }
-            break;
+        default: {
+            console.log(vdom);
+            throw "Unkonwn type";
+        }
     }
 }
 function display(vdom) {

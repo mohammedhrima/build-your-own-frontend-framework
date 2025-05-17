@@ -10,10 +10,7 @@ function element(tag, props = {}, ...children) {
 }
 
 function setProps(vdom) {
-	const props = vdom.props || {};
-	Object.keys(props).forEach(key => {
-		vdom.dom.setAttribute(key, props[key]);
-	})
+
 }
 
 function createDOM(vdom) {
@@ -27,7 +24,6 @@ function createDOM(vdom) {
 			console.log(vdom);
 			throw "Unkonwn type"
 		}
-			break;
 	}
 }
 

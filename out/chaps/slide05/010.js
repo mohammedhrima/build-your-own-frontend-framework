@@ -8,6 +8,10 @@ function element(tag, props = {}, ...children) {
     };
 }
 function setProps(vdom) {
+    const props = vdom.props || {};
+    Object.keys(props).forEach(key => {
+        vdom.dom.setAttribute(key, props[key]);
+    });
 }
 function createDOM(vdom) {
     switch (vdom.type) {
@@ -26,7 +30,7 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
-let comp = display(element("div", null));
+let comp = display(element("div", { class: "container" }));
 console.log(comp);
 const root = document.getElementById("root");
 root.appendChild(comp.dom);

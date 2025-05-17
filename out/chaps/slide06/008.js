@@ -41,12 +41,10 @@ function createDOM(vdom) {
             vdom.dom = document.createTextNode(vdom.value);
             break;
         }
-        default:
-            {
-                console.log(vdom);
-                throw "Unkonwn type";
-            }
-            break;
+        default: {
+            console.log(vdom);
+            throw "Unkonwn type";
+        }
     }
 }
 function display(vdom) {

@@ -27,7 +27,6 @@ function createDOM(vdom) {
 			console.log(vdom);
 			throw "Unkonwn type"
 		}
-			break;
 	}
 }
 
@@ -36,7 +35,7 @@ function display(vdom) {
 	return vdom
 }
 
-let comp = display(<div class="container"></div>)
+let comp = display(<div></div>)
 
 console.log(comp)
 
