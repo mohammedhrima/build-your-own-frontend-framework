@@ -38,7 +38,21 @@ function element(tag, props = {}, ...children) {
 }
 
 function removeProps(vdom) {
-
+	try {
+		const props = vdom.props;
+		for (const key of Object.keys(props || {})) {
+			if (vdom.dom) {
+				if (key.startsWith("on")) {
+					const eventType = key.slice(2).toLowerCase();
+					vdom.dom?.removeEventListener(eventType, props[key]);
+				} else if (vdom.dom) {
+					vdom.dom?.removeAttribute(key);
+				}
+			} else delete props[key];
+		}
+		vdom.props = {};
+	} catch (error) {
+	}
 }
 
 
@@ -53,6 +67,13 @@ function setProps(vdom) {
 		else vdom.dom.setAttribute(key, props[key]);
 	});
 
+}
+
+function destroyDOM(vdom) {
+	removeProps(vdom);
+	vdom.dom?.remove();
+	vdom.dom = null;
+	vdom.children?.map(destroyDOM);
 }
 
 function createDOM(vdom) {
@@ -81,6 +102,21 @@ function execute(mode, prev, next = null) {
 	switch (mode) {
 		case CREATE: {
 			createDOM(prev);
+			break;
+		}
+		case REMOVE: {
+			destroyDOM(prev);
+			break;
+		}
+		case REPLACE: {
+			removeProps(prev);
+			execute(CREATE, next);
+
+			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
+
+			prev.dom = next.dom;
+			prev.children = next.children;
+			prev.props = next.props;
 			break;
 		}
 		default:

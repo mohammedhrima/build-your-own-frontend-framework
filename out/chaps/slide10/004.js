@@ -78,12 +78,8 @@ function execute(mode, prev, next = null) {
             break;
     }
 }
-let globalVODM = null;
 function display(vdom) {
-    if (!globalVODM) {
-        execute(CREATE, vdom);
-        globalVODM = vdom;
-    }
+    execute(CREATE, vdom);
     return vdom;
 }
 let states = {};

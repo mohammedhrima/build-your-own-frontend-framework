@@ -134,35 +134,9 @@ function execute(mode, prev, next = null) {
 	}
 }
 
-function deepEqual(a, b) {
-	if (a !== a && b !== b) return true;
-	if (a === b) return true;
-	if (a == null || b == null) return false;
-	if (typeof a !== typeof b) return false;
-	if (Array.isArray(a) && Array.isArray(b)) {
-		if (a.length !== b.length) return false;
-		for (let i = 0; i < a.length; i++) {
-			if (!deepEqual(a[i], b[i])) return false;
-		}
-		return true;
-	}
-	if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
-	if (a instanceof RegExp && b instanceof RegExp) return a.toString() === b.toString();
-	if (typeof a === "function" && typeof b === "function") return a.toString() === b.toString();
-	if (typeof a === "object" && typeof b === "object") {
-		const keysA = Object.keys(a);
-		const keysB = Object.keys(b);
-		if (keysA.length !== keysB.length) return false;
-		for (let key of keysA) {
-			if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
-		}
-		return true;
-	}
-	return false;
-}
-
 function reconciliate(prev, next) {
-	if (!deepEqual(prev, next))
+	if (prev.type != next.type || prev.tag != next.tag ||
+		(prev.type == TEXT && prev.value != next.value))
 		return execute(REPLACE, prev, next);
 
 	const prevs = prev.children || [];
@@ -189,6 +163,7 @@ function reconciliate(prev, next) {
 		}
 	}
 }
+
 
 let globalVODM = null;
 function display(vdom) {
@@ -272,7 +247,7 @@ function Footer() {
 
 	return render(() => (
 		<footer class="blog-footer">
-			<p>© {new Date().getFullYear()} MiniBlog — Built with UraJS</p>
+			<p>© {new Date().getFullYear()} MiniBlog</p>
 		</footer>
 	));
 }

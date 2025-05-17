@@ -1,5 +1,8 @@
 const ELEMENT = "element";
 const TEXT = "text";
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
 function check(children) {
     let result = [];
     children.forEach(child => {
@@ -33,6 +36,8 @@ function element(tag, props = {}, ...children) {
         children: check(children)
     };
 }
+function removeProps(vdom) {
+}
 function setProps(vdom) {
     const props = vdom.props || {};
     Object.keys(props).forEach((key) => {
@@ -65,14 +70,54 @@ function createDOM(vdom) {
         }
     }
 }
+function execute(mode, prev, next = null) {
+    switch (mode) {
+        case CREATE: {
+            createDOM(prev);
+            break;
+        }
+        default:
+            break;
+    }
+}
+function reconciliate(prev, next) { }
+let globalVODM = null;
 function display(vdom) {
-    createDOM(vdom);
+    if (!globalVODM) {
+        execute(CREATE, vdom);
+        globalVODM = vdom;
+    }
+    else
+        reconciliate(globalVODM, vdom);
     return vdom;
 }
-const HandleClick = () => alert("Hellooo");
-let comp = display(element("div", { class: "container" },
-    element("h1", null, "Hello World"),
-    element("button", { onclick: HandleClick }, "click me")));
-console.log(comp);
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+let states = {};
+let index = 1;
+const State = (initValue) => {
+    const stateIndex = index++;
+    states[stateIndex] = initValue;
+    const getter = () => states[stateIndex];
+    const setter = (newValue) => {
+        states[stateIndex] = newValue;
+        updateView();
+    };
+    return [getter, setter];
+};
+const [count, setCount] = State(1);
+const HandleClick = () => setCount(count() + 1);
+function Component() {
+    return (element("div", { class: "container" },
+        element("h1", null,
+            "Hello World [",
+            count(),
+            "]"),
+        element("button", { onclick: HandleClick }, "click me")));
+}
+function updateView() {
+    let comp = display(element(Component, null));
+    console.log(comp);
+    const root = document.getElementById("root");
+    root.innerHTML = "";
+    root.appendChild(comp.dom);
+}
+updateView();

@@ -77,7 +77,12 @@ function destroyDOM(vdom) {
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
-            vdom.dom = document.createElement(vdom.tag);
+            if (vdom.tag === "root") {
+                vdom.dom = document.getElementById("root");
+            }
+            else {
+                vdom.dom = document.createElement(vdom.tag);
+            }
             setProps(vdom);
             vdom.children.forEach(child => {
                 createDOM(child);
@@ -89,10 +94,9 @@ function createDOM(vdom) {
             vdom.dom = document.createTextNode(vdom.value);
             break;
         }
-        default: {
-            console.log(vdom);
+        default:
+            console.error(vdom);
             throw "Unkonwn type";
-        }
     }
 }
 function execute(mode, prev, next = null) {
@@ -101,11 +105,53 @@ function execute(mode, prev, next = null) {
             createDOM(prev);
             break;
         }
+        case REMOVE: {
+            destroyDOM(prev);
+            break;
+        }
+        case REPLACE: {
+            removeProps(prev);
+            execute(CREATE, next);
+            if (prev.dom && next.dom)
+                prev.dom.replaceWith(next.dom);
+            prev.dom = next.dom;
+            prev.children = next.children;
+            prev.props = next.props;
+            break;
+        }
         default:
             break;
     }
 }
-function reconciliate(prev, next) { }
+function reconciliate(prev, next) {
+    if (prev.type != next.type || prev.tag != next.tag ||
+        (prev.type == TEXT && prev.value != next.value))
+        return execute(REPLACE, prev, next);
+    const prevs = prev.children || [];
+    const nexts = next.children || [];
+    for (let i = 0; i < Math.max(prevs.length, nexts.length); i++) {
+        let child1 = prevs[i];
+        let child2 = nexts[i];
+        if (child1 && child2) {
+            reconciliate(child1, child2);
+        }
+        else if (!child1 && child2) {
+            if (i >= prevs.length) { // append
+                execute(CREATE, child2);
+                prevs.push(child2);
+                prev.dom.appendChild(child2.dom);
+            }
+            else { // replace
+                execute(CREATE, child2);
+                prevs[i] = child2;
+            }
+        }
+        else if (child1 && !child2) {
+            execute(REMOVE, child1);
+            prevs[i] = null;
+        }
+    }
+}
 let globalVODM = null;
 function display(vdom) {
     if (!globalVODM) {
@@ -116,6 +162,10 @@ function display(vdom) {
         reconciliate(globalVODM, vdom);
     return vdom;
 }
+function init() {
+}
+let vdom = null;
+let view = null;
 let states = {};
 let index = 1;
 const State = (initValue) => {
@@ -124,25 +174,32 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        updateView();
+        updateState();
     };
     return [getter, setter];
+};
+const updateState = () => {
+    const newVDOM = view();
+    if (vdom !== null)
+        reconciliate(vdom, newVDOM);
+    else
+        vdom = newVDOM;
+};
+const render = (callback) => {
+    view = callback;
+    vdom = view();
+    return vdom;
 };
 const [count, setCount] = State(1);
 const HandleClick = () => setCount(count() + 1);
 function Component() {
-    return (element("div", { class: "container" },
-        element("h1", null,
-            "Hello World [",
-            count(),
-            "]"),
-        element("button", { onclick: HandleClick }, "click me")));
+    return render(() => (element("root", null,
+        element("div", { class: "container" },
+            element("h1", null,
+                "Hello World [",
+                count(),
+                "]"),
+            element("button", { onclick: HandleClick }, "click me")))));
 }
-function updateView() {
-    let comp = display(element(Component, null));
-    console.log(comp);
-    const root = document.getElementById("root");
-    root.innerHTML = "";
-    root.appendChild(comp.dom);
-}
-updateView();
+let comp = display(element(Component, null));
+console.log(comp);

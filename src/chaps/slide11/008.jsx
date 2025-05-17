@@ -202,12 +202,12 @@ function init() {
 	return { State, render };
 }
 
-function Component() {
-	const { render, State } = init();
-	
-	const [count, setCount] = State(1);
-	const HandleClick = () => setCount(count() + 1)
+const { render, State } = init();
+const [count, setCount] = State(1);
 
+const HandleClick = () => setCount(count() + 1)
+
+function Component() {
 	return render(() => (
 		<root>
 			<div class="container" >

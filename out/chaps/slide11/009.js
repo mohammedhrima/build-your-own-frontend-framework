@@ -21,15 +21,13 @@ function check(children) {
 }
 function element(tag, props = {}, ...children) {
     if (typeof tag === "function") {
-        let funcTag;
         try {
-            funcTag = tag(props, children);
+            return tag(props, children);
         }
         catch (error) {
             console.error("failed to execute functag", tag);
-            return [];
         }
-        return funcTag;
+        return [];
     }
     return {
         type: ELEMENT,
@@ -37,9 +35,6 @@ function element(tag, props = {}, ...children) {
         props: props,
         children: check(children)
     };
-}
-function fragment(props = {}, ...children) {
-    return children;
 }
 function removeProps(vdom) {
     try {
@@ -196,36 +191,17 @@ function init() {
     };
     return { State, render };
 }
-function Navbar() {
-    const { render } = init();
-    return render(() => (element("nav", { class: "blog-navbar" },
-        element("h1", null, "MiniBlog"))));
-}
-function Body() {
-    const { render } = init();
-    return render(() => (element("main", { class: "blog-body" },
-        element("article", null,
-            element("h2", null, "Building with Your own Framework"),
-            element(fragment, null,
-                element("p", null, "This one-page blog shows how you can build and style components from scratch using only a few lines of code.")),
-            element(fragment, null,
-                element("p", null, "You can experiment with components, state, and rendering without heavy dependencies. Ideal for learning or prototyping fast."))))));
-}
-function Footer() {
-    const { render } = init();
-    return render(() => (element("footer", { class: "blog-footer" },
-        element("p", null,
-            "\u00A9 ",
-            new Date().getFullYear(),
-            " MiniBlog"))));
-}
 function Component() {
-    const { render } = init();
+    const { render, State } = init();
+    const [count, setCount] = State(1);
+    const HandleClick = () => setCount(count() + 1);
     return render(() => (element("root", null,
-        element("div", { class: "blog" },
-            element(Navbar, null),
-            element(Body, null),
-            element(Footer, null)))));
+        element("div", { class: "container" },
+            element("h1", null,
+                "Hello World [",
+                count(),
+                "]"),
+            element("button", { onclick: HandleClick }, "click me")))));
 }
 let comp = display(element(Component, null));
 console.log(comp);

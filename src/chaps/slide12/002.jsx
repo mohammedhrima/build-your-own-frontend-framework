@@ -39,9 +39,6 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
-function fragment(props = {}, ...children) {
-	return children;
-}
 
 function removeProps(vdom) {
 	try {
@@ -225,18 +222,14 @@ function Body() {
 		<main class="blog-body">
 			<article>
 				<h2>Building with Your own Framework</h2>
-				<>
-					<p>
-						This one-page blog shows how you can build and style components
-						from scratch using only a few lines of code.
-					</p>
-				</>
-				<>
-					<p>
-						You can experiment with components, state, and rendering without
-						heavy dependencies. Ideal for learning or prototyping fast.
-					</p>
-				</>
+				<p>
+					This one-page blog shows how you can build and style components
+					from scratch using only a few lines of code.
+				</p>
+				<p>
+					You can experiment with components, state, and rendering without
+					heavy dependencies. Ideal for learning or prototyping fast.
+				</p>
 			</article>
 		</main>
 	));

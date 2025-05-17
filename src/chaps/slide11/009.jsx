@@ -22,14 +22,12 @@ function check(children) {
 
 function element(tag, props = {}, ...children) {
 	if (typeof tag === "function") {
-		let funcTag;
 		try {
-			funcTag = tag(props, children);
+			return tag(props, children);
 		} catch (error) {
 			console.error("failed to execute functag", tag);
-			return [];
 		}
-		return funcTag;
+		return [];
 	}
 	return {
 		type: ELEMENT,
@@ -38,7 +36,6 @@ function element(tag, props = {}, ...children) {
 		children: check(children)
 	}
 }
-
 
 function removeProps(vdom) {
 	try {
@@ -205,54 +202,20 @@ function init() {
 	return { State, render };
 }
 
-function Navbar() {
-	const { render } = init();
-
-	return render(() => (
-		<nav class="blog-navbar">
-			<h1>MiniBlog</h1>
-		</nav>
-	));
-}
-
-function Body() {
-	const { render } = init();
-
-	return render(() => (
-		<main class="blog-body">
-			<article>
-				<h2>Building with Your own Framework</h2>
-				<p>
-					This one-page blog shows how you can build and style components
-					from scratch using only a few lines of code.
-				</p>
-				<p>
-					You can experiment with components, state, and rendering without
-					heavy dependencies. Ideal for learning or prototyping fast.
-				</p>
-			</article>
-		</main>
-	));
-}
-
-function Footer() {
-	const { render } = init();
-
-	return render(() => (
-		<footer class="blog-footer">
-			<p>© {new Date().getFullYear()} MiniBlog</p>
-		</footer>
-	));
-}
-
 function Component() {
-	const { render } = init();
+	const { render, State } = init();
+	
+	const [count, setCount] = State(1);
+	const HandleClick = () => setCount(count() + 1)
 
 	return render(() => (
 		<root>
-			
+			<div class="container" >
+				<h1>Hello World [{count()}]</h1>
+				<button onclick={HandleClick}>click me</button>
+			</div>
 		</root>
-	));
+	))
 }
 
 let comp = display(<Component />)

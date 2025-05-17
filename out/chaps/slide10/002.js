@@ -69,17 +69,9 @@ function createDOM(vdom) {
     }
 }
 function execute(mode, prev, next = null) {
-    switch (mode) {
-        case CREATE: {
-            createDOM(prev);
-            break;
-        }
-        default:
-            break;
-    }
 }
 function display(vdom) {
-    execute(CREATE, vdom);
+    createDOM(vdom);
     return vdom;
 }
 let states = {};

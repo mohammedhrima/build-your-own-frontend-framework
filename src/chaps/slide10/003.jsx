@@ -75,7 +75,6 @@ function createDOM(vdom) {
 function execute(mode, prev, next = null) {
 	switch (mode) {
 		case CREATE: {
-			createDOM(prev);
 			break;
 		}
 		default:
@@ -83,9 +82,8 @@ function execute(mode, prev, next = null) {
 	}
 }
 
-let globalVODM = null;
 function display(vdom) {
-	execute(CREATE, vdom);
+	createDOM(vdom);
 	return vdom
 }
 

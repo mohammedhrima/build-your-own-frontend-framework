@@ -68,12 +68,6 @@ function setProps(vdom) {
             vdom.dom.setAttribute(key, props[key]);
     });
 }
-function destroyDOM(vdom) {
-    removeProps(vdom);
-    vdom.dom?.remove();
-    vdom.dom = null;
-    vdom.children?.map(destroyDOM);
-}
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
@@ -101,29 +95,11 @@ function execute(mode, prev, next = null) {
             createDOM(prev);
             break;
         }
-        case REMOVE: {
-            destroyDOM(prev);
-            break;
-        }
-        case REPLACE: {
-            removeProps(prev);
-            execute(CREATE, next);
-            if (prev.dom && next.dom)
-                prev.dom.replaceWith(next.dom);
-            prev.dom = next.dom;
-            prev.children = next.children;
-            prev.props = next.props;
-            break;
-        }
         default:
             break;
     }
 }
-function reconciliate(prev, next) {
-    if (prev.type != next.type || prev.tag != next.tag ||
-        (prev.type == TEXT && prev.value != next.value))
-        return execute(REPLACE, prev, next);
-}
+function reconciliate(prev, next) { }
 let globalVODM = null;
 function display(vdom) {
     if (!globalVODM) {

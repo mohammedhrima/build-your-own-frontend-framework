@@ -55,7 +55,6 @@ function removeProps(vdom) {
 	}
 }
 
-
 function setProps(vdom) {
 	const props = vdom.props || {};
 
@@ -104,55 +103,12 @@ function execute(mode, prev, next = null) {
 			createDOM(prev);
 			break;
 		}
-		case REMOVE: {
-			destroyDOM(prev);
-			break;
-		}
-		case REPLACE: {
-			removeProps(prev);
-			execute(CREATE, next);
-
-			if (prev.dom && next.dom) prev.dom.replaceWith(next.dom);
-
-			prev.dom = next.dom;
-			prev.children = next.children;
-			prev.props = next.props;
-			break;
-		}
 		default:
 			break;
 	}
 }
 
-function reconciliate(prev, next) {
-	if (prev.type != next.type || prev.tag != next.tag ||
-		(prev.type == TEXT && prev.value != next.value))
-		return execute(REPLACE, prev, next);
-
-	const prevs = prev.children || [];
-	const nexts = next.children || [];
-	for (let i = 0; i < Math.max(prevs.length, nexts.length); i++) {
-		let child1 = prevs[i];
-		let child2 = nexts[i];
-
-		if (child1 && child2) {
-			reconciliate(child1, child2);
-		} else if (!child1 && child2) {
-			if (i >= prevs.length) { // append
-				execute(CREATE, child2);
-				prevs.push(child2);
-				prev.dom.appendChild(child2.dom);
-			}
-			else { // replace
-				execute(CREATE, child2);
-				prevs[i] = child2;
-			}
-		} else if (child1 && !child2) {
-			execute(REMOVE, child1);
-			prevs[i] = null;
-		}
-	}
-}
+function reconciliate(prev, next) { }
 
 let globalVODM = null;
 function display(vdom) {

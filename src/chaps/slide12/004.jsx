@@ -39,6 +39,9 @@ function element(tag, props = {}, ...children) {
 	}
 }
 
+function fragment(props = {}, ...children) {
+	return children;
+}
 
 function removeProps(vdom) {
 	try {
@@ -131,9 +134,35 @@ function execute(mode, prev, next = null) {
 	}
 }
 
+function deepEqual(a, b) {
+	if (a !== a && b !== b) return true;
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (typeof a !== typeof b) return false;
+	if (Array.isArray(a) && Array.isArray(b)) {
+		if (a.length !== b.length) return false;
+		for (let i = 0; i < a.length; i++) {
+			if (!deepEqual(a[i], b[i])) return false;
+		}
+		return true;
+	}
+	if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+	if (a instanceof RegExp && b instanceof RegExp) return a.toString() === b.toString();
+	if (typeof a === "function" && typeof b === "function") return a.toString() === b.toString();
+	if (typeof a === "object" && typeof b === "object") {
+		const keysA = Object.keys(a);
+		const keysB = Object.keys(b);
+		if (keysA.length !== keysB.length) return false;
+		for (let key of keysA) {
+			if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+		}
+		return true;
+	}
+	return false;
+}
+
 function reconciliate(prev, next) {
-	if (prev.type != next.type || prev.tag != next.tag ||
-		(prev.type == TEXT && prev.value != next.value))
+	if (!deepEqual(prev, next))
 		return execute(REPLACE, prev, next);
 
 	const prevs = prev.children || [];
@@ -160,7 +189,6 @@ function reconciliate(prev, next) {
 		}
 	}
 }
-
 
 let globalVODM = null;
 function display(vdom) {
@@ -222,14 +250,18 @@ function Body() {
 		<main class="blog-body">
 			<article>
 				<h2>Building with Your own Framework</h2>
-				<p>
-					This one-page blog shows how you can build and style components
-					from scratch using only a few lines of code.
-				</p>
-				<p>
-					You can experiment with components, state, and rendering without
-					heavy dependencies. Ideal for learning or prototyping fast.
-				</p>
+				<>
+					<p>
+						This one-page blog shows how you can build and style components
+						from scratch using only a few lines of code.
+					</p>
+				</>
+				<>
+					<p>
+						You can experiment with components, state, and rendering without
+						heavy dependencies. Ideal for learning or prototyping fast.
+					</p>
+				</>
 			</article>
 		</main>
 	));
@@ -240,7 +272,7 @@ function Footer() {
 
 	return render(() => (
 		<footer class="blog-footer">
-			<p>© {new Date().getFullYear()} MiniBlog</p>
+			<p>© {new Date().getFullYear()} MiniBlog — Built with UraJS</p>
 		</footer>
 	));
 }
@@ -250,7 +282,11 @@ function Component() {
 
 	return render(() => (
 		<root>
-			
+			<div class="blog">
+				<Navbar />
+				<Body />
+				<Footer />
+			</div>
 		</root>
 	));
 }

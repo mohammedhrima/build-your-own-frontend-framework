@@ -245,7 +245,8 @@ function TodoApp() {
 	const [text, setText] = State("");
 
 	const toggleTodo = (index) => {
-		const updated = todos().map((todo, i) => i === index ? { ...todo, done: !todo.done } : todo);
+		const updated = todos().map(
+			(todo, i) => i === index ? { ...todo, done: !todo.done } : todo);
 		setTodos(updated);
 	};
 

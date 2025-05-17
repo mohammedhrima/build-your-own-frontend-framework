@@ -36,6 +36,27 @@ function element(tag, props = {}, ...children) {
         children: check(children)
     };
 }
+function removeProps(vdom) {
+    try {
+        const props = vdom.props;
+        for (const key of Object.keys(props || {})) {
+            if (vdom.dom) {
+                if (key.startsWith("on")) {
+                    const eventType = key.slice(2).toLowerCase();
+                    vdom.dom?.removeEventListener(eventType, props[key]);
+                }
+                else if (vdom.dom) {
+                    vdom.dom?.removeAttribute(key);
+                }
+            }
+            else
+                delete props[key];
+        }
+        vdom.props = {};
+    }
+    catch (error) {
+    }
+}
 function setProps(vdom) {
     const props = vdom.props || {};
     Object.keys(props).forEach((key) => {
@@ -46,6 +67,12 @@ function setProps(vdom) {
         else
             vdom.dom.setAttribute(key, props[key]);
     });
+}
+function destroyDOM(vdom) {
+    removeProps(vdom);
+    vdom.dom?.remove();
+    vdom.dom = null;
+    vdom.children?.map(destroyDOM);
 }
 function createDOM(vdom) {
     switch (vdom.type) {
@@ -74,11 +101,49 @@ function execute(mode, prev, next = null) {
             createDOM(prev);
             break;
         }
+        case REMOVE: {
+            destroyDOM(prev);
+            break;
+        }
+        case REPLACE: {
+            removeProps(prev);
+            execute(CREATE, next);
+            if (prev.dom && next.dom)
+                prev.dom.replaceWith(next.dom);
+            prev.dom = next.dom;
+            prev.children = next.children;
+            prev.props = next.props;
+            break;
+        }
         default:
             break;
     }
 }
-function reconciliate(prev, next) { }
+function reconciliate(prev, next) {
+    if (prev.type != next.type || prev.tag != next.tag ||
+        (prev.type == TEXT && prev.value != next.value))
+        return execute(REPLACE, prev, next);
+    const prevs = prev.children || [];
+    const nexts = next.children || [];
+    for (let i = 0; i < Math.max(prevs.length, nexts.length); i++) {
+        let child1 = prevs[i];
+        let child2 = nexts[i];
+        if (child1 && child2) {
+            reconciliate(child1, child2);
+        }
+        else if (!child1 && child2) {
+            if (i >= prevs.length) { // append
+                execute(CREATE, child2);
+                prevs.push(child2);
+                prev.dom.appendChild(child2.dom);
+            }
+            else { // replace
+                execute(CREATE, child2);
+                prevs[i] = child2;
+            }
+        }
+    }
+}
 let globalVODM = null;
 function display(vdom) {
     if (!globalVODM) {

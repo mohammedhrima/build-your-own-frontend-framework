@@ -216,11 +216,7 @@ function Footer() {
 }
 function Component() {
     const { render } = init();
-    return render(() => (element("root", null,
-        element("div", { class: "blog" },
-            element(Navbar, null),
-            element(Body, null),
-            element(Footer, null)))));
+    return render(() => (element("root", null)));
 }
 let comp = display(element(Component, null));
 console.log(comp);

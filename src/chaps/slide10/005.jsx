@@ -83,15 +83,9 @@ function execute(mode, prev, next = null) {
 	}
 }
 
-function reconciliate(prev, next) { }
-
 let globalVODM = null;
 function display(vdom) {
-	if (!globalVODM) {
-		execute(CREATE, vdom);
-		globalVODM = vdom;
-	}
-	else reconciliate(globalVODM, vdom);
+	execute(CREATE, vdom);
 	return vdom
 }
 
