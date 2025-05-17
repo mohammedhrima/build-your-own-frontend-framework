@@ -18,12 +18,9 @@ Each step is presented as a small, digestible lesson with live code examples and
 🧠 Hands-on education – See how each change affects the output as you build along.
 
 ## 📂 Project Structure
-./chaps/ – Contains the individual steps (or "chapters") of the project. Each step includes:
-
-A TypeScript code snippet.
-
-A corresponding output to demonstrate what it does.
-
+- ./chaps/ – Contains the individual steps (or "chapters") of the project. Each step includes:
+    - A TypeScript code snippet.
+    - A corresponding output to demonstrate what it does.
 
 ## 📦 Installation (Optional for local run)
 If you'd like to run it locally:
@@ -34,6 +31,7 @@ If you'd like to run it locally:
     npm install
     npm start
 ```
++ then open `index.html` using live server
 
 ## 🧭 How to Use
 - Open the demo link.
