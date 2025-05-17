@@ -73,7 +73,7 @@ function createDOM(vdom) {
 }
 
 function execute(mode, prev, next = null) {
-	
+
 }
 
 function display(vdom) {
@@ -117,3 +117,19 @@ function updateView() {
 }
 
 updateView();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

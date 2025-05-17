@@ -250,7 +250,7 @@ function Component() {
 
 	return render(() => (
 		<root>
-			
+
 		</root>
 	));
 }

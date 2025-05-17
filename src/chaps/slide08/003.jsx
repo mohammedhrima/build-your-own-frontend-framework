@@ -84,9 +84,22 @@ function Component() {
 	)
 }
 
-let comp = display(<Component/>)
+let comp = display(<Component />)
 
 console.log(comp)
 
 const root = document.getElementById("root");
 root.appendChild(comp.dom);
+
+
+
+
+
+
+
+
+
+
+
+
+

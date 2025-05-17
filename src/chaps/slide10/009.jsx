@@ -101,7 +101,7 @@ function execute(mode, prev, next = null) {
 	}
 }
 
-function reconciliate(prev, next) {}
+function reconciliate(prev, next) { }
 
 let globalVODM = null;
 function display(vdom) {

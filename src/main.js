@@ -78,7 +78,7 @@ function open_file(index) {
 
 			// Step 2: Now safely highlight tokens by index
 			const tokens = Array.from(document.getElementsByClassName("token"));
-			
+
 			highlight.forEach(([start, end]) => {
 				for (let i = start; i <= end && i < tokens.length; i++) {
 					tokens[i].classList.add("highlighted");

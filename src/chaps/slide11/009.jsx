@@ -204,7 +204,7 @@ function init() {
 
 function Component() {
 	const { render, State } = init();
-	
+
 	const [count, setCount] = State(1);
 	const HandleClick = () => setCount(count() + 1)
 
@@ -220,3 +220,15 @@ function Component() {
 
 let comp = display(<Component />)
 console.log(comp)
+
+
+
+
+
+
+
+
+
+
+
+

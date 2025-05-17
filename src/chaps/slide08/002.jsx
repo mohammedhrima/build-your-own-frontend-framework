@@ -86,3 +86,12 @@ console.log(comp)
 
 const root = document.getElementById("root");
 root.appendChild(comp.dom);
+
+
+
+
+
+
+
+
+

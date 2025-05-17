@@ -12,7 +12,7 @@ export const obj = {
   ],
   "slide04": [
     { file: "001.js", scroll: 0, highlight: [] },
-    { file: "002.js", scroll: 0, highlight: [[0, 60]] }
+    { file: "002.js", scroll: 100, highlight: [[0, 60]] }
   ],
   "slide05": [
     { file: "001.js", scroll: 0, highlight: [[53, 62]] },
@@ -24,7 +24,7 @@ export const obj = {
     { file: "007.js", scroll: 0, highlight: [[128, 150]] },
     { file: "008.js", scroll: 0, highlight: [[36, 42], [73, 77]] },
     { file: "009.js", scroll: 0, highlight: [[42, 79]] },
-    { file: "010.js", scroll: 0, highlight: [[156, 160]] }
+    { file: "010.js", scroll: 500, highlight: [[156, 160]] }
   ],
   "slide06": [
     { file: "001.js", scroll: 0, highlight: [[5, 9]] },
@@ -44,11 +44,11 @@ export const obj = {
   "slide08": [
     { file: "001.js", scroll: 0, highlight: [[106, 144]] },
     { file: "002.js", scroll: 1300, highlight: [] },
-    { file: "003.js", scroll: 1300, highlight: [[378, 425], [431, 435]] },
+    { file: "003.js", scroll: 1500, highlight: [[378, 425], [431, 435]] },
   ],
   "slide09": [
-    { file: "001.js", scroll: 1500, highlight: [[426, 431]] },
-    { file: "002.js", scroll: 1500, highlight: [[431, 471], [473, 475]] },
+    { file: "001.js", scroll: 1800, highlight: [[426, 431]] },
+    { file: "002.js", scroll: 1800, highlight: [[431, 471], [473, 475]] },
     { file: "003.js", scroll: 1500, highlight: [[368, 387]] },
     { file: "004.js", scroll: 1500, highlight: [[387, 437]] },
     { file: "005.js", scroll: 1800, highlight: [[439, 450]] },
@@ -86,7 +86,7 @@ export const obj = {
   ],
   "slide12": [
     { file: "001.js", scroll: 4960, highlight: [[1068, 1255]] },
-    { file: "002.js", scroll: 5500, highlight: [[1281, 1314]] },
+    { file: "002.js", scroll: 6000, highlight: [[1281, 1314]] },
     { file: "003.js", scroll: 500, highlight: [[189, 203]] },
     { file: "004.js", scroll: 5600, highlight: [[1440, 1444], [1456, 1460], [1461, 1463], [1476, 1478]] },
   ],

@@ -256,7 +256,7 @@ function TodoApp() {
 		const value = input.value.trim();
 		if (value) {
 			setTodos([...todos(), { text: value, done: false }]);
-			input.value = ""; 
+			input.value = "";
 		}
 	}
 

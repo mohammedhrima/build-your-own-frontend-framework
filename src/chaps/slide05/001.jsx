@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 const ELEMENT = "element";
 
 function element(tag, props = {}, ...children) {
@@ -8,6 +15,7 @@ function element(tag, props = {}, ...children) {
 		children: children
 	}
 }
+
 
 let comp = <div></div>
 

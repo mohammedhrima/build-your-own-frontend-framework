@@ -85,8 +85,28 @@ body {
         }
     }
 }
+#ide::-webkit-scrollbar {
+    width: 8px;
+}
+
+#ide::-webkit-scrollbar-track {
+    background: var(--nav); /* same as navbar */
+    border-radius: var(--radius);
+}
+
+#ide::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: var(--radius);
+    border: 2px solid var(--nav); /* creates a border around the thumb */
+}
+
+#ide::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-hover);
+}
 
 #ide {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--nav);
     flex: 1;
     background-color: #282c34;
     color: #abb2bf;
@@ -144,7 +164,6 @@ code {
 
 .highlighted {
     color: #facc15 !important;
-    /* font-size: 16px; */
     font-weight: bold !important;
 }
 

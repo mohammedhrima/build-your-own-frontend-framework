@@ -1,9 +1,11 @@
+
+
 const ELEMENT = "element";
 const TEXT = "text";
 
-function check(children) { 
+function check(children) {
 	let result = [];
-	children.forEach(child => {})
+	children.forEach(child => { })
 	return result;
 }
 

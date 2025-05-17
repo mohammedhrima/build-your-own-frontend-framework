@@ -199,10 +199,24 @@ function Component() {
 	)
 }
 
-function updateView()
-{
+function updateView() {
 	let comp = display(<Component />)
 	console.log(comp)
 }
 
 updateView();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,12 +17,12 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
-		if (typeof tag === "function") {
-        try {
-            return tag(props, children);
-        } catch (error) {
-            console.error("failed to execute functag", tag);
-        }
+	if (typeof tag === "function") {
+		try {
+			return tag(props, children);
+		} catch (error) {
+			console.error("failed to execute functag", tag);
+		}
 		return [];
 	}
 	return {
@@ -84,14 +84,25 @@ function Component() {
 	)
 }
 
-function updateView()
-{
-	
+function updateView() {
+
 }
 
-let comp = display(<Component/>)
+let comp = display(<Component />)
 
 console.log(comp)
 
 const root = document.getElementById("root");
 root.appendChild(comp.dom);
+
+
+
+
+
+
+
+
+
+
+
+

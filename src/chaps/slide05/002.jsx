@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 const ELEMENT = "element";
 
 function element(tag, props = {}, ...children) {
@@ -13,7 +22,7 @@ function createDOM(vdom) {
 
 }
 
-function display(vdom) { 
+function display(vdom) {
 
 }
 
