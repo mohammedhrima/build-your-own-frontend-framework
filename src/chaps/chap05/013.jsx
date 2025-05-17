@@ -17,6 +17,20 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
+	if(typeof tag === "function")
+	{
+		let funcTag;
+        try {
+            funcTag = tag(props);
+        } catch (error) {
+            console.error("failed to execute functag", tag);
+            return [];
+        }
+		funcTag.func = tag;
+        funcTag.funcProps = props;
+        funcTag.isfunc = true;
+        return funcTag;
+	}
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -28,14 +42,14 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
 	const props = vdom.props || {};
 	const style = {};
-	
+
 	Object.keys(props || {}).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
-		} 
+		}
 		else if (key === "style") Object.assign(style, props[key]);
-		else  vdom.dom.setAttribute(key, props[key]);
+		else vdom.dom.setAttribute(key, props[key]);
 	});
 	if (Object.keys(style).length > 0) {
 		vdom.dom.style.cssText = Object.keys(style).map((styleProp) => {
@@ -50,7 +64,7 @@ function createDOM(vdom) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
 			setProps(vdom);
-			vdom.children.forEach(child =>{
+			vdom.children.forEach(child => {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom)
 			})
@@ -70,20 +84,45 @@ function display(vdom) {
 	return vdom
 }
 
-const HandleClique = () => alert("Hellooo")
+let states = {};
+let index = 1;
+const State = (initValue) =>{
+	const stateIndex = index++;
+    states[stateIndex] = initValue;
 
-let comp = display(
-	<div className="container" >
-		<h1>Hello World</h1>
-		<button onclick={HandleClique}
-			style={{ backgroundColor: "#e2e8f0", cursor: "pointer",
-				padding: "10px 15px", fontSize: "25px", margin: "10px 50px"
-			}}
-		>click me</button>
-	</div>
-)
+	const getter = () => states[stateIndex];
+    const setter = (newValue) => {
+        states[stateIndex] = newValue;
+        updateView();
+    }
+    return [getter, setter];
+}
 
-console.log(comp)
+const [count, setCount] = State(1);
 
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+const HandleClique = () => setCount(count() + 1)
+
+function Component() {
+	return (
+		<div className="container" >
+			<h1>Hello World</h1>
+			<button onclick={HandleClique}
+				style={{
+					backgroundColor: "#e2e8f0", cursor: "pointer",
+					padding: "10px 15px", fontSize: "25px", margin: "10px 50px"
+				}}
+			>click me</button>
+		</div>
+	)
+}
+
+function updateView()
+{
+	let comp = display(<Component/>)
+	console.log(comp)
+	const root = document.getElementById("root");
+	root.innerHTML = ""
+	root.appendChild(comp.dom);
+}
+
+updateView();

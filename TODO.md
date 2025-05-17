@@ -33,16 +33,20 @@
 
    5.
       + add functional component
-      + add execute function
       + add state management
+   
+
+      + add execute function
       + add init function
    
    6.
+      + add destroyDOMDOM, remove props
       + add reconciliatiton
-      + add deepEqual
    
    7. 
-      + add fragment
-
+      + add root tag
+      + wrap inside init function
+      + add Navbar, Footer, Body
+         
    8.
-      + add routing
+      + mention the tsconfig, add fragment

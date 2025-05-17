@@ -7,7 +7,7 @@
     "rootDir": "src",
     "outDir": "out",
     "jsxFactory": "element",
-    // "jsxFragmentFactory": "fragment",
+    "jsxFragmentFactory": "fragment",
     "allowJs": true,
     "strict": false,
     "pretty": true,

@@ -1,14 +1,11 @@
 #!/bin/bash
 
 new_chap_file() {
-  local dir="./src/chaps/chap04"
+  local dir="./src/chaps/chap08"
   local template="./src/code.js"
 
   # Ensure the directory exists
-  if [ ! -d "$dir" ]; then
-    echo "Error: Directory '$dir' does not exist."
-    exist 1
-  fi
+  mkdir -p $dir
 
   # Ensure the template file exists
   if [ ! -f "$template" ]; then

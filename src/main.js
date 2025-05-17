@@ -2,6 +2,25 @@ import { arr, obj } from "./data.js";
 
 const lang = document.getElementsByClassName("language-jsx")[0];
 
+/*
+type: html, js, jsx
+*/
+
+export const chapters = [
+	{
+		name: "Presentation",
+		type: "",
+		content: {
+			js: "",
+			jsx: "",
+			text: ""
+		}
+	},
+	{
+
+	}
+]
+
 
 const JsxFiles = [];
 const JsFiles = [];
@@ -20,15 +39,15 @@ arr.forEach(e => {
 function open_file(index) {
 	const filename = JsxFiles[index];
 	const jsFile = JsFiles[index];
-	
-	
-	
+
+
+
 	// Remove old script
 	const oldScript = document.getElementById("code");
 	if (oldScript) {
 		oldScript.remove();
 	}
-	
+
 	console.clear();
 	console.log("open file", filename);
 	console.log("JS File:", jsFile);
@@ -37,7 +56,7 @@ function open_file(index) {
 	root.innerHTML = "";
 	const script = document.createElement("script");
 	script.id = "code";
-	script.src = jsFile + "?v=" + Date.now(); 
+	script.src = jsFile + "?v=" + Date.now();
 	script.type = "module";
 	script.onload = () => console.log("Script loaded:", jsFile);
 	script.onerror = () => console.error("Failed to load script:", jsFile);

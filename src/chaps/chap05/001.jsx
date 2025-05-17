@@ -72,6 +72,10 @@ function display(vdom) {
 
 const HandleClique = () => alert("Hellooo")
 
+function Component() {
+	return 
+}
+
 let comp = display(
 	<div className="container" >
 		<h1>Hello World</h1>

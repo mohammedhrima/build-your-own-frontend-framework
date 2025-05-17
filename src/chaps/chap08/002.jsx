@@ -43,7 +43,7 @@ function element(tag, props = {}, ...children) {
 }
 
 function fragment(props = {}, ...children) {
-	return children;
+    return children;
 }
 
 function removeProps(vdom) {
