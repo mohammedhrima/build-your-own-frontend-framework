@@ -3,6 +3,7 @@ function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
         children: children,
     };
@@ -14,10 +15,5 @@ try {
 catch (error) {
     console.error(error);
 }
-// in the console you will see something like this
-// 	{
-// 		"type": "element",
-// 		"tag": "div",
-// 		"props": null,
-// 		"children": []
-// 	}
+// what you seen now in the console is what
+// call (VIRTUAL DOM)

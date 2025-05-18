@@ -11,10 +11,7 @@ function TodoApp() {
 					{todos().map((todo, index) => (
 						<li>
 							<span>{todo}</span>
-							<button
-								type="button"
-								onclick={() => removeTodo(index)}
-							>
+							<button type="button" onclick={() => removeTodo(index)}>
 								x
 							</button>
 						</li>

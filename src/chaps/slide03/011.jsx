@@ -4,6 +4,7 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
 		children: children,
 	};
@@ -36,7 +37,7 @@ function display(vdom) {
 }
 
 try {
-	// check the console
+	// check the console to class attribute in the VDOM
 	let comp = display(<div class="container"></div>);
 	console.log(comp);
 

@@ -36,10 +36,9 @@ export const obj = {
   ],
   "slide03": [
     { isCode: true, file: "001.js", scroll: h * .7, highlight: [] },
-    { isCode: true, file: "002.js", scroll: h * .81, highlight: [[40, 46], [48, 54]] },
-    { isCode: true, file: "003.js", scroll: h * .8, highlight: [[44, 72]] },
+    { isCode: true, file: "002.js", scroll: h * .81, highlight: [[39, 45], [47, 53]] },
+    { isCode: true, file: "003.js", scroll: h * .8, highlight: [[51, 55]] },
     { isCode: true, file: "004.js", scroll: h * .82, highlight: [[57, 69]] },
-    { isCode: true, file: "005.js", scroll: h * .985, highlight: [[93, 100]] },
     { isCode: true, file: "006.js", scroll: h * 1.115, highlight: [[109, 109]] },
     { isCode: true, file: "007.js", scroll: h * 1.17, highlight: [[128, 146]] },
     { isCode: true, file: "008.js", scroll: h * .76, highlight: [[39, 45]] },

@@ -98,7 +98,25 @@ document.getElementById("next").onclick = () => {
         location.hash = `${index + 1}`;
     }
 };
+document.addEventListener("keydown", (event) => {
+    const index = parseInt(location.hash.slice(1), 10) || 0;
+    if (event.key === "ArrowLeft" && index > 0) {
+        location.hash = `${index - 1}`;
+    }
+    else if (event.key === "ArrowRight" && index < JsxFiles.length - 1) {
+        location.hash = `${index + 1}`;
+    }
+});
 // Listen to hash change
 window.addEventListener("hashchange", load_from_hash);
 // Initial load
 load_from_hash();
+// const line = document.createElement('div');
+// line.style.position = 'fixed';
+// line.style.top = '50%';
+// line.style.left = '0';
+// line.style.width = '100%';
+// line.style.height = '2px';
+// line.style.backgroundColor = 'red';
+// line.style.zIndex = '9999';
+// document.body.appendChild(line);

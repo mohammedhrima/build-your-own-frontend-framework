@@ -7,20 +7,19 @@ const REMOVE = "remove";
 
 function check(children) {
 	const result = [];
-	children.forEach(child => {
+	children.forEach((child) => {
 		if (["string", "number"].includes(typeof child)) {
 			result.push({
 				type: TEXT,
-				value: child
-			})
-		}
-		else if (Array.isArray(child)) {
+				value: child,
+				dom: null,
+			});
+		} else if (Array.isArray(child)) {
 			result.push(...check(child));
-		}
-		else {
+		} else {
 			result.push(child);
 		}
-	})
+	});
 	return result;
 }
 
@@ -31,20 +30,20 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
-		children: check(children)
-	}
+		children: check(children),
+	};
 }
 
 function setProps(vdom) {
 	const props = vdom.props || {};
-	Object.keys(props).forEach(key => {
+	Object.keys(props).forEach((key) => {
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
-		}
-		else vdom.dom.setAttribute(key, props[key]);
-	})
+		} else vdom.dom.setAttribute(key, props[key]);
+	});
 }
 
 function createDOM(vdom) {
@@ -52,10 +51,10 @@ function createDOM(vdom) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
 			setProps(vdom);
-			vdom.children.forEach(child => {
+			vdom.children.forEach((child) => {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom);
-			})
+			});
 			break;
 		}
 		case TEXT: {
@@ -64,7 +63,7 @@ function createDOM(vdom) {
 		}
 		default: {
 			console.error(vdom);
-			throw "Unkonwn type"
+			throw "Unkonwn type";
 		}
 	}
 }
@@ -75,11 +74,9 @@ function removeProps(vdom) {
 		if (vdom.dom && key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom?.removeEventListener(eventType, props[key]);
-		}
-		else if (vdom.dom) {
+		} else if (vdom.dom) {
 			vdom.dom?.removeAttribute(key);
-		}
-		else delete props[key];
+		} else delete props[key];
 	}
 	vdom.props = {};
 }
@@ -117,8 +114,11 @@ function execute(mode, prev, next = null) {
 }
 
 function reconciliate(prev, next) {
-	if (typeof prev != typeof next || prev.type != next.type ||
-		(prev.type == TEXT && prev.value != next.value))
+	if (
+		typeof prev != typeof next ||
+		prev.type != next.type ||
+		(prev.type == TEXT && prev.value != next.value)
+	)
 		return execute(REPLACE, prev, next);
 
 	const prevs = prev.children || [];
@@ -134,8 +134,7 @@ function reconciliate(prev, next) {
 				// push the new child to the array
 				execute(CREATE, child2);
 				prevs.push(child2);
-			}
-			else {
+			} else {
 				// replace null with the new child
 				execute(CREATE, child2);
 				prevs[i] = child2;
@@ -153,9 +152,8 @@ function display(vdom) {
 	if (!globalVODM) {
 		execute(CREATE, vdom);
 		globalVODM = vdom;
-	}
-	else reconciliate(globalVODM, vdom);
-	return vdom
+	} else reconciliate(globalVODM, vdom);
+	return vdom;
 }
 
 let states = {};
@@ -168,26 +166,26 @@ const State = (initValue) => {
 	const getter = () => states[stateIndex];
 	const setter = (newValue) => {
 		states[stateIndex] = newValue;
-		display(<Component />)
-	}
+		display(<Component />);
+	};
 	return [getter, setter];
-}
+};
 
 const [count, setCount] = State(1);
 const HandleClick = () => setCount(count() + 1);
 
 function Component() {
 	return (
-		<div class="container" >
+		<div class="container">
 			<h1>Hello World [{count()}]</h1>
 			<button onclick={HandleClick}>click me</button>
 		</div>
-	)
+	);
 }
 
 try {
-	let comp = display(<Component />)
-	console.log(comp)
+	let comp = display(<Component />);
+	console.log(comp);
 
 	const root = document.getElementById("root");
 	root.innerHTML = "";

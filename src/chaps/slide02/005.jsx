@@ -2,11 +2,13 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: "element",
 		tag: tag,
+		dom: null,
 		props: props,
 		children: children,
 	};
 }
 
+// add try catch block
 try {
 	let comp = <div></div>;
 	console.log(comp);

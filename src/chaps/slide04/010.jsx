@@ -8,6 +8,7 @@ function check(children) {
 			result.push({
 				type: TEXT,
 				value: child,
+				dom: null,
 			});
 		} else if (Array.isArray(child)) {
 			result.push(...check(child));
@@ -22,6 +23,7 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
 		// check the console
 		children: check(children),

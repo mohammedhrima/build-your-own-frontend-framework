@@ -5,11 +5,12 @@ const REPLACE = "replace";
 const REMOVE = "remove";
 function check(children) {
     const result = [];
-    children.forEach(child => {
+    children.forEach((child) => {
         if (["string", "number"].includes(typeof child)) {
             result.push({
                 type: TEXT,
-                value: child
+                value: child,
+                dom: null,
             });
         }
         else if (Array.isArray(child)) {
@@ -28,13 +29,14 @@ function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
-        children: check(children)
+        children: check(children),
     };
 }
 function setProps(vdom) {
     const props = vdom.props || {};
-    Object.keys(props).forEach(key => {
+    Object.keys(props).forEach((key) => {
         if (key.startsWith("on")) {
             const eventType = key.slice(2).toLowerCase();
             vdom.dom.addEventListener(eventType, props[key]);
@@ -48,7 +50,7 @@ function createDOM(vdom) {
         case ELEMENT: {
             vdom.dom = document.createElement(vdom.tag);
             setProps(vdom);
-            vdom.children.forEach(child => {
+            vdom.children.forEach((child) => {
                 createDOM(child);
                 vdom.dom.appendChild(child.dom);
             });
@@ -74,8 +76,7 @@ function execute(mode, prev, next = null) {
             break;
     }
 }
-function reconciliate(prev, next) {
-}
+function reconciliate(prev, next) { }
 function display(vdom) {
     execute(CREATE, vdom);
     return vdom;

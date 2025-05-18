@@ -7,6 +7,7 @@ slide.innerHTML = `
     <pre><code>{
   type: "element",
   tag: "div",
+  dom: null,
   props: null,
   children: []
 }</code></pre>

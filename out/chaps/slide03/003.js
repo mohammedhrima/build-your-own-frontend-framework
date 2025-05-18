@@ -3,22 +3,16 @@ function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
         children: children,
     };
 }
-function createDOM(vdom) {
-    switch (vdom.type) {
-        case ELEMENT: {
-            break;
-        }
-        default: {
-            console.error(vdom);
-            throw "Unkonwn type";
-        }
-    }
+function createDOM(vdom) { }
+function display(vdom) {
+    createDOM(vdom); // call create dom
+    return vdom;
 }
-function display(vdom) { }
 try {
     let comp = element("div", null);
     console.log(comp);

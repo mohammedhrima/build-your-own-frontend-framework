@@ -9,6 +9,7 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
 		children: children,
 	};

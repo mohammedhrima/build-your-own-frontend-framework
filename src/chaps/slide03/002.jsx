@@ -4,16 +4,16 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
 		children: children,
 	};
 }
 
-// this function will be used to create
-// real DOM from virtual DOM
+// create real DOM from virtual DOM
 function createDOM(vdom) {}
 
-// this function will display the view
+// display the view
 function display(vdom) {}
 
 try {

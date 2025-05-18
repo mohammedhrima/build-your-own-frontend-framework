@@ -3,11 +3,12 @@ function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
         children: children,
     };
 }
-// set properties a straight forward function :')
+// time to set some properties :')
 function setProps(vdom) { }
 function createDOM(vdom) {
     switch (vdom.type) {

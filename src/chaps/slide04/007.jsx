@@ -8,6 +8,7 @@ function check(children) {
 			result.push({
 				type: TEXT,
 				value: child,
+				dom: null,
 			});
 		}
 		// if it's an array, call check and give child 
@@ -24,6 +25,7 @@ function element(tag, props = {}, ...children) {
 	return {
 		type: ELEMENT,
 		tag: tag,
+		dom: null,
 		props: props,
 		children: children,
 	};

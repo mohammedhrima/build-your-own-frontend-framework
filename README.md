@@ -1,13 +1,54 @@
-# build your own framework
+# Build Your Own Framework
++ Create a **mini frontend framework** step by step using **TypeScript**.
++ 👉 Live Demo: https://mohammedhrima.github.io/build-your-own-frontend-framework/
 
-+ step by step to create a mini frontend framework using Typescript
-+ check ./chaps directory for each step
+## 🚀 Overview
++ This is an interactive coding presentation that walks you through the process of building a frontend framework from scratch. It is designed to be educational, practical, and beginner-friendly, focusing on core concepts behind modern JavaScript frameworks like React, Vue, and others.
++ Each step is presented as a small, digestible lesson with live code examples and visual output.
 
-# Get started
+## ✨ Features
+📚 Step-by-step learning – Navigate through chapters using Next and Previous buttons.
+
+💻 Live Code Preview – Left side shows the code example.
+
+🖼️ Live Output View – Right side renders the result of the current code.
+
+🧠 Hands-on education – See how each change affects the output as you build along.
+
+📁 Check the `./chaps` directory for each stage of the implementation.
+
+---
+
+## 📦 Installation (Optional for local run)
+If you'd like to run it locally:
 
 ```bash
-    npm i
+    git clone https://github.com/mohammedhrima/build-your-own-frontend-framework.git
+    cd build-your-own-frontend-framework
+    npm install
     npm start
 ```
-+ use live server in vscode or any alternative to open index.html in the browser
-+ the web site is sliding platform where you can follow up step by step to build you ronw front end framework from scratch
++ then open `index.html` using live server
+
+## 🧭 How to Use
+- Open the demo link.
+- Click on the Next button to move to the next coding step.
+- Observe the code changes on the left and how the output is updated on the right.
+- Go back with the Previous button anytime.
+
+## 🧭 Navigation
++ Click the Next and Previous buttons to move between slides.
++ Or use your Left (←) and Right (→) arrow keys for keyboard navigation.
+
+## 📖 Topics Covered
+- Virtual DOM basics
+- JSX rendering
+- Component architecture
+- State management
+- Re-rendering logic
+- And more…
+
+## 📸 Preview
+<p align="center">
+  <img src="./screenshot.png" alt="Logo" width="800">
+</p>

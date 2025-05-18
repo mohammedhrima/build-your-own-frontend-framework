@@ -7,6 +7,7 @@ function check(children) {
             result.push({
                 type: TEXT,
                 value: child,
+                dom: null,
             });
         }
         else if (Array.isArray(child)) {
@@ -26,6 +27,7 @@ function element(tag, props = {}, ...children) {
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
         children: check(children),
     };
@@ -66,7 +68,7 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
-const HandleClick = () => alert("Hellooo");
+const HandleClick = () => alert("Hellooo I'm button");
 function Component() {
     return (element("div", { class: "container" },
         element("h1", null, "Hello World"),
