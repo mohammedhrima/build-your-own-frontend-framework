@@ -1,20 +1,17 @@
-import { arr, obj } from "./data.js";
+import { obj } from "./data.js";
 
 const lang = document.getElementsByClassName("language-jsx")[0];
 
 const JsxFiles = [];
 const JsFiles = [];
 
-// Populate file lists
-arr.forEach(e => {
+Object.keys(obj).forEach(e => {
 	obj[e].forEach(n => {
 		JsxFiles.push({ file: `./src/chaps/${e}/${n.file}x`, scroll: n.scroll, highlight: n.highlight, isCode: n.isCode });
 		JsFiles.push(`./out/chaps/${e}/${n.file}`);
 	});
 });
 
-
-// Load file at given index
 function open_file(index) {
 	const slide = document.getElementById("slide");
 	slide.innerHTML = "";
@@ -37,18 +34,14 @@ function open_file(index) {
 
 	console.clear();
 
-	console.log("index:", index, "arr: ", arr);
-	console.log("open file", filename);
-	console.log("JS File:", jsFile);
-	// console.log("test:", JsxFiles[index]);
-	// Load new script
+	console.info("view file:", jsFile);
 	const root = document.getElementById("root");
 	root.innerHTML = "";
 	const script = document.createElement("script");
 	script.id = "code";
 	script.src = jsFile + "?v=" + Date.now();
 	script.type = "module";
-	script.onload = () => console.log("Script loaded:", jsFile);
+	// script.onload = () => console.log("Script loaded:", jsFile);
 	script.onerror = () => console.error("Failed to load script:", jsFile);
 	document.body.appendChild(script);
 
@@ -80,14 +73,11 @@ function open_file(index) {
 						newNodes.push(node);
 					}
 				});
-
 				// Replace content with normalized nodes
 				code.replaceChildren(...newNodes);
 			});
-
 			// Step 2: Now safely highlight tokens by index
 			const tokens = Array.from(document.getElementsByClassName("token"));
-
 			highlight.forEach(([start, end]) => {
 				for (let i = start; i <= end && i < tokens.length; i++) {
 					tokens[i].classList.add("highlighted");

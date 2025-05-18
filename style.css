@@ -31,20 +31,6 @@ body {
     background-color: var(--bg);
 }
 
-
-
-#root {
-    background-color: var(--bg);
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: var(--text);
-    /* padding: 2rem; */
-    height: 100%;
-}
-
 #move {
     position: fixed;
     bottom: 20px;
@@ -89,15 +75,30 @@ body {
 }
 
 #ide {
-    /* Existing styles */
-    overflow-y: auto;
     scrollbar-width: thin;
-    /* For Firefox */
     scrollbar-color: var(--accent) var(--nav);
-    /* For Firefox */
+    flex: 1;
+    background-color: #282c34;
+    color: #abb2bf;
+    font-family: 'Fira Code', monospace;
+    padding: 15px;
+    line-height: 1.5;
+    height: 100%;
+    overflow-y: auto;
+
+    /* min-height: 100vh; */
+
+    pre {
+        padding-top: 100vh;
+        padding-bottom: 100vh;
+
+        /* height: 100%; */
+        /* display: flex; */
+        /* align-items: center; */
+        code {}
+    }
 }
 
-/* For WebKit-based browsers (Chrome, Safari, Edge) */
 #ide::-webkit-scrollbar {
     width: 8px;
 }
@@ -116,17 +117,63 @@ body {
     background-color: var(--accent-hover);
 }
 
-#ide {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) var(--nav);
+#container {
     flex: 1;
-    background-color: #282c34;
-    color: #abb2bf;
-    font-family: 'Fira Code', monospace;
-    padding: 20px;
-    line-height: 1.5;
-    height: 100%;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+
+    #root {
+        flex: 1;
+        background-color: var(--bg);
+        height: calc(100vh - 300px - 5px);
+        /* default size minus console & resizer */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: var(--text);
+        overflow: auto;
+    }
+
+    #resizer {
+        height: 5px;
+        background: #555;
+        cursor: row-resize;
+    }
+
+    #console {
+        background: #1e1e1e;
+        color: #ccc;
+        height: 420px;
+        overflow-y: auto;
+        padding: 10px;
+        border-top: 2px solid #333;
+        font-size: 14px;
+    }
+
+    .log {
+        color: #ccc;
+    }
+
+    .error {
+        color: #ff4c4c;
+    }
+
+    .warn {
+        color: #e6db74;
+    }
+
+    .info {
+        color: #66d9ef;
+    }
+
+    .console-line {
+        padding: 2px 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
 }
 
 #slide {
@@ -172,13 +219,14 @@ body {
 .slide-content {
     .bullet-list {
         text-align: left;
-        margin: 1rem auto;
-        max-width: 700px;
-        padding-left: 1.2rem;
+        margin: 10px 50px;
+        /* max-width: 700px; removed for slide02/006.jsx */
+        /* padding-left: 1.2rem; */
         color: var(--text-muted);
     }
 
     .bullet-list li {
+        display: block !important;
         margin-bottom: 0.5rem;
         line-height: 1.5;
     }
@@ -242,9 +290,25 @@ code {
 }
 
 .highlighted {
-    color: #facc15 !important;
-    font-weight: bold !important;
+    background-color: rgba(97, 175, 239, 0.2);
+    border-radius: 4px;
+    padding: 0 2px;
 }
+
+.highlighted {
+    animation: fadeInHighlight 0.4s ease-out;
+}
+
+@keyframes fadeInHighlight {
+    from {
+        background-color: rgba(97, 175, 239, 0);
+    }
+
+    to {
+        background-color: rgba(97, 175, 239, 0.2);
+    }
+}
+
 
 .container {
     button {
@@ -340,6 +404,16 @@ code {
                     color: var(--success);
                 }
             }
+
+            span {
+                flex: 1;
+                cursor: pointer;
+            }
+
+            button {
+                margin-left: 10px;
+                max-width: 40px;
+            }
         }
     }
 }
@@ -401,4 +475,10 @@ code {
 
 button {
     cursor: pointer;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

@@ -1,7 +1,10 @@
 const ELEMENT = "element";
 const TEXT = "text";
+const CREATE = "create";
+const REPLACE = "replace";
+const REMOVE = "remove";
 function check(children) {
-    let result = [];
+    const result = [];
     children.forEach(child => {
         if (["string", "number"].includes(typeof child)) {
             result.push({
@@ -9,22 +12,18 @@ function check(children) {
                 value: child
             });
         }
-        else if (Array.isArray(child))
+        else if (Array.isArray(child)) {
             result.push(...check(child));
-        else
+        }
+        else {
             result.push(child);
+        }
     });
     return result;
 }
 function element(tag, props = {}, ...children) {
     if (typeof tag === "function") {
-        try {
-            return tag(props, children);
-        }
-        catch (error) {
-            console.error("failed to execute functag", tag);
-        }
-        return [];
+        return tag(props, children);
     }
     return {
         type: ELEMENT,
@@ -35,7 +34,7 @@ function element(tag, props = {}, ...children) {
 }
 function setProps(vdom) {
     const props = vdom.props || {};
-    Object.keys(props).forEach((key) => {
+    Object.keys(props).forEach(key => {
         if (key.startsWith("on")) {
             const eventType = key.slice(2).toLowerCase();
             vdom.dom.addEventListener(eventType, props[key]);
@@ -47,8 +46,14 @@ function setProps(vdom) {
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
-            vdom.dom = document.createElement(vdom.tag);
-            setProps(vdom);
+            if (vdom.tag === "root") {
+                vdom.dom = document.getElementById("root");
+                ;
+            }
+            else {
+                vdom.dom = document.createElement(vdom.tag);
+                setProps(vdom);
+            }
             vdom.children.forEach(child => {
                 createDOM(child);
                 vdom.dom.appendChild(child.dom);
@@ -60,26 +65,125 @@ function createDOM(vdom) {
             break;
         }
         default: {
-            console.log(vdom);
+            console.error(vdom);
             throw "Unkonwn type";
         }
     }
 }
+function removeProps(vdom) {
+    const props = vdom.props;
+    for (const key of Object.keys(props || {})) {
+        if (vdom.dom && key.startsWith("on")) {
+            const eventType = key.slice(2).toLowerCase();
+            vdom.dom?.removeEventListener(eventType, props[key]);
+        }
+        else if (vdom.dom) {
+            vdom.dom?.removeAttribute(key);
+        }
+        else
+            delete props[key];
+    }
+    vdom.props = {};
+}
+function destroyDOM(vdom) {
+    removeProps(vdom);
+    vdom.dom?.remove();
+    vdom.dom = null;
+    vdom.children?.map(destroyDOM);
+}
+function execute(mode, prev, next = null) {
+    switch (mode) {
+        case CREATE: {
+            createDOM(prev);
+            break;
+        }
+        case REMOVE: {
+            destroyDOM(prev);
+            break;
+        }
+        case REPLACE: {
+            removeProps(prev);
+            execute(CREATE, next);
+            prev.dom.replaceWith(next.dom);
+            prev.dom = next.dom;
+            prev.children = next.children;
+            prev.props = next.props;
+            break;
+        }
+        default:
+            break;
+    }
+}
+function reconciliate(prev, next) {
+    if (typeof prev != typeof next || prev.type != next.type ||
+        (prev.type == TEXT && prev.value != next.value))
+        return execute(REPLACE, prev, next);
+    const prevs = prev.children || [];
+    const nexts = next.children || [];
+    for (let i = 0; i < Math.max(prevs.length, nexts.length); i++) {
+        let child1 = prevs[i];
+        let child2 = nexts[i];
+        if (child1 && child2) {
+            reconciliate(child1, child2);
+        }
+        else if (!child1 && child2) {
+            if (i >= prevs.length) {
+                // push the new child to the array
+                execute(CREATE, child2);
+                prevs.push(child2);
+            }
+            else {
+                // replace null with the new child
+                execute(CREATE, child2);
+                prevs[i] = child2;
+            }
+            prev.dom.appendChild(child2.dom);
+        }
+        else if (child1 && !child2) {
+            execute(REMOVE, child1);
+            prevs[i] = null;
+        }
+    }
+}
+let globalVODM = null;
 function display(vdom) {
-    createDOM(vdom);
+    if (!globalVODM) {
+        execute(CREATE, vdom);
+        globalVODM = vdom;
+    }
+    else
+        reconciliate(globalVODM, vdom);
     return vdom;
 }
-const HandleClick = () => alert("Hellooo");
+let states = {};
+let index = 1;
+const State = (initValue) => {
+    const stateIndex = index++;
+    states[stateIndex] = initValue;
+    const getter = () => states[stateIndex];
+    const setter = (newValue) => {
+        states[stateIndex] = newValue;
+        display(element(Component, null));
+    };
+    return [getter, setter];
+};
+const [count, setCount] = State(1);
+const HandleClick = () => setCount(count() + 1);
 function Component() {
     return (element("div", { class: "container" },
-        element("h1", null, "Hello World"),
+        element("h1", null,
+            "Hello World [",
+            count(),
+            "]"),
         element("button", { onclick: HandleClick }, "click me")));
 }
-function updateView() {
+try {
     let comp = display(element(Component, null));
     console.log(comp);
     const root = document.getElementById("root");
     root.innerHTML = "";
     root.appendChild(comp.dom);
 }
-updateView();
+catch (error) {
+    console.error(error);
+}

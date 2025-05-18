@@ -25,7 +25,11 @@
     <pre><code class="language-jsx"></code></pre>
   </div>
 
-  <div id="root"></div>
+  <div id="container">
+    <div id="root"></div>
+    <div id="resizer"></div>
+    <div id="console"></div>
+  </div>
 
   <div id="move">
     <button id="prev">previous</button>
@@ -34,6 +38,98 @@
 
 </body>
 <script type="module" src="./out/main.js"></script>
+<!-- <script type="module" src="./out/chaps/slide10/final.js"></script> -->
 <script id="code"></script>
+
+<script>
+  const consoleView = document.getElementById("console");
+
+  function appendToConsole(type, args) {
+    const line = document.createElement("div");
+    line.classList.add("console-line", type);
+
+    const message = args.map(arg => {
+      if (typeof arg === "object") {
+        try {
+          return JSON.stringify(arg, null, 2);
+        } catch {
+          return "[Circular]";
+        }
+      }
+      return String(arg);
+    }).join(" ");
+
+    line.textContent = message;
+    consoleView.appendChild(line);
+    consoleView.scrollTop = consoleView.scrollHeight;
+  }
+
+  // Preserve original console methods
+  const originalLog = console.log;
+  const originalError = console.error;
+  const originalWarn = console.warn;
+  const originalInfo = console.info;
+
+  console.log = function (...args) {
+    originalLog.apply(console, args);
+    appendToConsole("log", args);
+  };
+
+  console.error = function (...args) {
+    originalError.apply(console, args);
+    appendToConsole("error", args);
+  };
+
+  console.warn = function (...args) {
+    originalWarn.apply(console, args);
+    appendToConsole("warn", args);
+  };
+
+  console.info = function (...args) {
+    originalInfo.apply(console, args);
+    appendToConsole("info", args);
+  };
+  const originalClear = console.clear;
+  console.clear = function () {
+    originalClear.apply(console);
+    consoleView.innerHTML = "";
+  };
+
+  const resizer = document.getElementById('resizer');
+  const root = document.getElementById('root');
+  const consolePane = document.getElementById('console');
+
+  let isResizing = false;
+
+  resizer.addEventListener('mousedown', function (e) {
+    isResizing = true;
+    document.body.style.cursor = 'row-resize';
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isResizing) return;
+
+    const containerTop = document.getElementById('container').getBoundingClientRect().top;
+    const offset = e.clientY - containerTop;
+
+    // Minimum and maximum limits
+    const minHeight = 50;
+    const maxHeight = window.innerHeight - 50;
+
+    const rootHeight = Math.max(minHeight, Math.min(offset, maxHeight));
+    const consoleHeight = window.innerHeight - rootHeight - resizer.offsetHeight;
+
+    root.style.flex = 'none';
+    root.style.height = `${rootHeight}px`;
+
+    consolePane.style.flex = 'none';
+    consolePane.style.height = `${consoleHeight}px`;
+  });
+
+  document.addEventListener('mouseup', function () {
+    isResizing = false;
+    document.body.style.cursor = '';
+  });
+</script>
 
 </html>

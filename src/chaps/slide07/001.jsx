@@ -2,39 +2,42 @@ const ELEMENT = "element";
 const TEXT = "text";
 
 function check(children) {
-	let result = [];
-	children.forEach(child => {
+	const result = [];
+	children.forEach((child) => {
 		if (["string", "number"].includes(typeof child)) {
 			result.push({
 				type: TEXT,
-				value: child
-			})
+				value: child,
+			});
+		} else if (Array.isArray(child)) {
+			result.push(...check(child));
+		} else {
+			result.push(child);
 		}
-		else if (Array.isArray(child)) result.push(...check(child));
-		else result.push(child);
-	})
+	});
 	return result;
 }
 
 function element(tag, props = {}, ...children) {
+	if (typeof tag === "function") {
+		console.log("found function:", tag);
+		return tag(props, children);
+	}
 	return {
 		type: ELEMENT,
 		tag: tag,
 		props: props,
-		children: check(children)
-	}
+		children: check(children),
+	};
 }
 
 function setProps(vdom) {
 	const props = vdom.props || {};
-
 	Object.keys(props).forEach((key) => {
-		// let's add event listeners to our DOM
 		if (key.startsWith("on")) {
 			const eventType = key.slice(2).toLowerCase();
 			vdom.dom.addEventListener(eventType, props[key]);
-		}
-		else vdom.dom.setAttribute(key, props[key]);
+		} else vdom.dom.setAttribute(key, props[key]);
 	});
 }
 
@@ -43,10 +46,10 @@ function createDOM(vdom) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
 			setProps(vdom);
-			vdom.children.forEach(child => {
+			vdom.children.forEach((child) => {
 				createDOM(child);
-				vdom.dom.appendChild(child.dom)
-			})
+				vdom.dom.appendChild(child.dom);
+			});
 			break;
 		}
 		case TEXT: {
@@ -54,24 +57,35 @@ function createDOM(vdom) {
 			break;
 		}
 		default: {
-			console.log(vdom);
-			throw "Unkonwn type"
+			console.error(vdom);
+			throw "Unkonwn type";
 		}
 	}
 }
 
 function display(vdom) {
 	createDOM(vdom);
-	return vdom
+	return vdom;
 }
 
-let comp = display(
-	<div class="container">
-		<h1>Hello World</h1>
-	</div>
-)
+const HandleClick = () => alert("Hellooo");
 
-console.log(comp)
+function Component() {
+	return (
+		<div class="container">
+			<h1>Hello World</h1>
+			<button onclick={HandleClick}>click me</button>
+		</div>
+	);
+}
 
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+try {
+	// check the console
+	let comp = display(<Component />);
+	console.log(comp);
+
+	const root = document.getElementById("root");
+	root.appendChild(comp.dom);
+} catch (error) {
+	console.error(error);
+}

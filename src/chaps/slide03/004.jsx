@@ -1,0 +1,34 @@
+const ELEMENT = "element";
+
+function element(tag, props = {}, ...children) {
+	return {
+		type: ELEMENT,
+		tag: tag,
+		props: props,
+		children: children,
+	};
+}
+
+function createDOM(vdom) {
+	switch (vdom.type) {
+		case ELEMENT: {
+			// create and save the DOM object inside dom
+			// attribute in vdom
+			vdom.dom = document.createElement(vdom.tag);
+			break;
+		}
+		default: {
+			console.error(vdom);
+			throw "Unkonwn type";
+		}
+	}
+}
+
+function display(vdom) {}
+
+try {
+	let comp = <div></div>;
+	console.log(comp);
+} catch (error) {
+	console.error(error);
+}

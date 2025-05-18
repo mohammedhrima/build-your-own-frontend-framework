@@ -1,49 +1,35 @@
+const slide = document.getElementById("slide");
 
+slide.innerHTML = `
+<div class="slide-content">
+  <p>Now it's time to work on <strong>functional components</strong>.</p>
+  <br/>
+  <p>
+    When the first character of a tag is <em>lowercase</em>, <br/>
+    the JSX transpiler treats it as a native HTML element and passes the tag name as a string.
+  </p>
 
+  <br/>
+  <p>
+    But if the first character is <em>uppercase</em>, <br/>
+    it assumes it's a component and passes it as a identifier.
+  </p>
 
+  <br/>
+  <p>Example:</p>
 
-const ELEMENT = "element";
-// Let’s start by creating a simple text element and displaying it in the view
-const TEXT = "text";
+  <pre><code>&lt;div&gt;&lt;/div&gt;</code></pre>
+  <p>Transpiles to:</p>
+  <pre><code>element("div", null, null)</code></pre>
 
-function element(tag, props = {}, ...children) {
-	return {
-		type: ELEMENT,
-		tag: tag,
-		props: props,
-		children: children
-	}
-}
+  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ccc;" />
 
-function setProps(vdom) {
-	const props = vdom.props || {};
-	Object.keys(props).forEach(key => {
-		vdom.dom.setAttribute(key, props[key]);
-	})
-}
+  <pre><code>&lt;Div&gt;&lt;/Div&gt;</code></pre>
+  <p>Transpiles to:</p>
+  <pre><code>element(Div, null, null)</code></pre>
 
-function createDOM(vdom) {
-	switch (vdom.type) {
-		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
-			setProps(vdom);
-			break;
-		}
-		default: {
-			console.log(vdom);
-			throw "Unkonwn type"
-		}
-	}
-}
-
-function display(vdom) {
-	createDOM(vdom);
-	return vdom
-}
-
-let comp = display(<div class="container"></div>)
-
-console.log(comp)
-
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+  <p>
+    That's why in ReactJS and other virtual DOM frameworks, component names always start with a capital letter.
+  </p>
+</div>
+`;
