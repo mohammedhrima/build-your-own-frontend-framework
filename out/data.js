@@ -106,6 +106,7 @@ export const obj = {
         { isCode: true, file: "001.js", scroll: h * 4.07, highlight: [[1041, 18]] },
         { isCode: true, file: "002.js", scroll: h * 4.38, highlight: [[947, 291]] },
         { isCode: true, file: "003.js", scroll: h * .82, highlight: [[84, 20]] },
-        { isCode: true, file: "final.js", scroll: h * 4.4, highlight: [] },
+        { isCode: true, file: "result.js", scroll: h * 4.4, highlight: [] },
+        { isCode: false, file: "end.js", scroll: h * 4.4, highlight: [] },
     ]
 };
