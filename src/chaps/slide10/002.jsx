@@ -202,8 +202,7 @@ function TodoApp() {
 					{todos().map((todo, index) => (
 						<li>
 							<span style="flex: 1; cursor: pointer;">
-								{" "}
-								{todo}{" "}
+								{todo}
 							</span>
 							<button
 								type="button"

@@ -133,12 +133,14 @@ root.innerHTML = "";
 // Initial load
 load_from_hash();
 
-// const line = document.createElement('div');
-// line.style.position = 'fixed';
-// line.style.top = '50%';
-// line.style.left = '0';
-// line.style.width = '100%';
-// line.style.height = '2px';
-// line.style.backgroundColor = 'red';
-// line.style.zIndex = '9999';
-// document.body.appendChild(line);
+const line = document.createElement('div');
+line.style.position = 'fixed';
+line.style.top = '50%';
+line.style.left = '0';
+line.style.width = '100%';
+line.style.height = '2px';
+line.style.backgroundColor = 'red';
+line.style.zIndex = '9999';
+document.body.appendChild(line);
+
+// console.log("hello")
