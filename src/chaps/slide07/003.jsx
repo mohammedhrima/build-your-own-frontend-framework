@@ -1,10 +1,6 @@
 const ELEMENT = "element";
 const TEXT = "text";
 
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
-
 function check(children) {
 	const result = [];
 	children.forEach((child) => {
@@ -14,8 +10,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -68,12 +62,15 @@ function createDOM(vdom) {
 	}
 }
 
-function execute(mode, prev, next = null) {}
-
 function display(vdom) {
 	createDOM(vdom);
 	return vdom;
 }
+
+let states = {};
+let index = 1;
+
+const State = (initValue) => {};
 
 const HandleClick = () => alert("Hellooo I'm button");
 
@@ -86,12 +83,17 @@ function Component() {
 	);
 }
 
-try {
+function updateView() {
 	let comp = display(<Component />);
 	console.log(comp);
 
 	const root = document.getElementById("root");
+	root.innerHTML = "";
 	root.appendChild(comp.dom);
+}
+
+try {
+	updateView();
 } catch (error) {
 	console.error(error);
 }

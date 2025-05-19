@@ -10,11 +10,9 @@ function check(children) {
                 dom: null,
             });
         }
-        // if it's an array, call check and give child 
-        // as arguement then join the return value
-        // to result
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
+        // otherwise let's push it to result
+        else {
+            result.push(child);
         }
     });
     return result;

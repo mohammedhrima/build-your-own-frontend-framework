@@ -10,11 +10,7 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
-		}
-		// otherwise it's just VDOM child
-		else {
+		}  else {
 			result.push(child);
 		}
 	});
@@ -47,6 +43,11 @@ function createDOM(vdom) {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom);
 			});
+			break;
+		}
+		case TEXT: {
+			// create dom for text
+			vdom.dom = document.createTextNode(vdom.value);
 			break;
 		}
 		default: {

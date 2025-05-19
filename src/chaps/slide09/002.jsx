@@ -14,8 +14,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -49,7 +47,7 @@ function setProps(vdom) {
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
-			if (vdom.tag === "root") {
+			if (prev.tag === "root") {
 				vdom.dom = document.getElementById("root");
 			} else {
 				vdom.dom = document.createElement(vdom.tag);
@@ -156,7 +154,8 @@ function display(vdom) {
 	if (!globalVODM) {
 		execute(CREATE, vdom);
 		globalVODM = vdom;
-	} else reconciliate(globalVODM, vdom);
+	} // otherwise reconciliate the new vdom with globalVDOM
+	else reconciliate(globalVODM, vdom);
 	return vdom;
 }
 
@@ -170,7 +169,7 @@ const State = (initValue) => {
 	const getter = () => states[stateIndex];
 	const setter = (newValue) => {
 		states[stateIndex] = newValue;
-		display(<Component />);
+		updateView();
 	};
 	return [getter, setter];
 };
@@ -180,20 +179,22 @@ const HandleClick = () => setCount(count() + 1);
 
 function Component() {
 	return (
-		<div class="container">
-			<h1>Hello World [{count()}]</h1>
-			<button onclick={HandleClick}>click me</button>
-		</div>
+		<root>
+			<div class="container">
+				<h1>Hello World [{count()}]</h1>
+				<button onclick={HandleClick}>click me</button>
+			</div>
+		</root>
 	);
 }
 
-try {
+function updateView() {
 	let comp = display(<Component />);
 	console.log(comp);
+}
 
-	const root = document.getElementById("root");
-	root.innerHTML = "";
-	root.appendChild(comp.dom);
+try {
+	updateView();
 } catch (error) {
 	console.error(error);
 }

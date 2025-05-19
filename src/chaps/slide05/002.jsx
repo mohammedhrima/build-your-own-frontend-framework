@@ -10,9 +10,7 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
-		} else {
+		}  else {
 			result.push(child);
 		}
 	});
@@ -32,10 +30,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
 	const props = vdom.props || {};
 	Object.keys(props).forEach((key) => {
-		if (key.startsWith("on")) {
-			const eventType = key.slice(2).toLowerCase();
-			vdom.dom.addEventListener(eventType, props[key]);
-		} else vdom.dom.setAttribute(key, props[key]);
+		vdom.dom.setAttribute(key, props[key]);
 	});
 }
 
@@ -72,6 +67,7 @@ try {
 	let comp = display(
 		<div class="container">
 			<h1>Hello World</h1>
+			{/* what a useless button */}
 			<button onclick={HandleClick}>click me</button>
 		</div>
 	);

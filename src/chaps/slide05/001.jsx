@@ -10,9 +10,7 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
-		} else {
+		}  else {
 			result.push(child);
 		}
 	});
@@ -32,11 +30,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
 	const props = vdom.props || {};
 	Object.keys(props).forEach((key) => {
-		// let's add event listeners to our DOM
-		if (key.startsWith("on")) {
-			const eventType = key.slice(2).toLowerCase();
-			vdom.dom.addEventListener(eventType, props[key]);
-		} else vdom.dom.setAttribute(key, props[key]);
+		vdom.dom.setAttribute(key, props[key]);
 	});
 }
 
@@ -67,12 +61,16 @@ function display(vdom) {
 	return vdom;
 }
 
+const HandleClick = () => alert("Hellooo I'm button");
+
 try {
 	let comp = display(
 		<div class="container">
 			<h1>Hello World</h1>
+			<button onclick={HandleClick}>click me</button>
 		</div>
 	);
+	// click click
 	console.log(comp);
 
 	const root = document.getElementById("root");

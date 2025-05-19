@@ -1,10 +1,6 @@
 const ELEMENT = "element";
 const TEXT = "text";
 
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
-
 function check(children) {
 	const result = [];
 	children.forEach((child) => {
@@ -14,8 +10,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -68,23 +62,30 @@ function createDOM(vdom) {
 	}
 }
 
-function execute(mode, prev, next = null) {
-	switch (mode) {
-		case CREATE: {
-			createDOM(prev);
-			break;
-		}
-		default:
-			break;
-	}
-}
-
 function display(vdom) {
 	createDOM(vdom);
 	return vdom;
 }
 
-const HandleClick = () => alert("Hellooo");
+let states = {};
+let index = 1;
+
+const State = (initValue) => {
+	const stateIndex = index++;
+	states[stateIndex] = initValue;
+
+	const getter = () => states[stateIndex];
+	const setter = (newValue) => {
+		states[stateIndex] = newValue;
+	};
+	// return an array of setter, and getter, similar to React.useState
+	return [getter, setter];
+};
+
+// create our first instance of State
+const [count, setCount] = State(1);
+// change the value on click
+const HandleClick = () => setCount(count() + 1);
 
 function Component() {
 	return (
@@ -95,12 +96,17 @@ function Component() {
 	);
 }
 
-try {
+function updateView() {
 	let comp = display(<Component />);
 	console.log(comp);
 
 	const root = document.getElementById("root");
+	root.innerHTML = "";
 	root.appendChild(comp.dom);
+}
+
+try {
+	updateView();
 } catch (error) {
 	console.error(error);
 }

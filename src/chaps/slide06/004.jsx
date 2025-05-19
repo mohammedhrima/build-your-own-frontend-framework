@@ -10,9 +10,7 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
-		} else {
+		}  else {
 			result.push(child);
 		}
 	});
@@ -20,10 +18,6 @@ function check(children) {
 }
 
 function element(tag, props = {}, ...children) {
-	if (typeof tag === "function") {
-		console.log("found function:", tag);
-		return tag(props, children);
-	}
 	return {
 		type: ELEMENT,
 		tag: tag,
@@ -82,7 +76,7 @@ function Component() {
 }
 
 try {
-	let comp = display(Component());
+	let comp = display(<Component/>);
 	console.log(comp);
 
 	const root = document.getElementById("root");

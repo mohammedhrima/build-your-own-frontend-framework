@@ -16,4 +16,4 @@ catch (error) {
     console.error(error);
 }
 // what you seen now in the console is what
-// call (VIRTUAL DOM)
+// we call (VIRTUAL DOM)

@@ -10,9 +10,6 @@ function element(tag, props = {}, ...children) {
 	};
 }
 
-// time to set some properties :')
-function setProps(vdom) {}
-
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
@@ -32,7 +29,8 @@ function display(vdom) {
 }
 
 try {
-	let comp = display(<div></div>);
+	// let's add class to our div, see the console
+	let comp = display(<div class="container"></div>);
 	console.log(comp);
 
 	const root = document.getElementById("root");

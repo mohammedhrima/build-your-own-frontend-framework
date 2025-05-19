@@ -1,7 +1,7 @@
 const slide = document.getElementById("slide");
 slide.innerHTML = `
   <div class="slide-content">
-    <h1>What is JSX?</h1>
+    <h1>So, What is this JSX ?</h1>
     <ul class="bullet-list">
       <li><strong>extension</strong>: enables writing XML-like syntax in JS/TS</li>
       <li><strong>relies on a parser</strong> to transpile the XML syntax to JavaScript equivalent code</li>

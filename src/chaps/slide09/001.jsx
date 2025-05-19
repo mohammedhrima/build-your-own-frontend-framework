@@ -14,8 +14,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -49,8 +47,17 @@ function setProps(vdom) {
 function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
-			vdom.dom = document.createElement(vdom.tag);
-			setProps(vdom);
+			/*  create costum tag <root></root>
+				to get rid of
+				const root = document.getElementById("root");
+				root.innerHTML = "";
+				root.appendChild(comp.dom); */
+			if (prev.tag === "root") {
+				vdom.dom = document.getElementById("root");
+			} else {
+				vdom.dom = document.createElement(vdom.tag);
+				setProps(vdom);
+			}
 			vdom.children.forEach((child) => {
 				createDOM(child);
 				vdom.dom.appendChild(child.dom);
@@ -152,7 +159,8 @@ function display(vdom) {
 	if (!globalVODM) {
 		execute(CREATE, vdom);
 		globalVODM = vdom;
-	} else reconciliate(globalVODM, vdom);
+	} 
+	else reconciliate(globalVODM, vdom);
 	return vdom;
 }
 
@@ -166,7 +174,7 @@ const State = (initValue) => {
 	const getter = () => states[stateIndex];
 	const setter = (newValue) => {
 		states[stateIndex] = newValue;
-		display(<Component />);
+		updateView();
 	};
 	return [getter, setter];
 };
@@ -183,13 +191,17 @@ function Component() {
 	);
 }
 
-try {
+function updateView() {
 	let comp = display(<Component />);
 	console.log(comp);
 
 	const root = document.getElementById("root");
 	root.innerHTML = "";
 	root.appendChild(comp.dom);
+}
+
+try {
+	updateView();
 } catch (error) {
 	console.error(error);
 }

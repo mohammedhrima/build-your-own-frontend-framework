@@ -10,9 +10,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -31,12 +28,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
     const props = vdom.props || {};
     Object.keys(props).forEach((key) => {
-        if (key.startsWith("on")) {
-            const eventType = key.slice(2).toLowerCase();
-            vdom.dom.addEventListener(eventType, props[key]);
-        }
-        else
-            vdom.dom.setAttribute(key, props[key]);
+        vdom.dom.setAttribute(key, props[key]);
     });
 }
 function createDOM(vdom) {

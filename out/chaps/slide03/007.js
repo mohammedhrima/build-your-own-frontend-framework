@@ -28,7 +28,7 @@ try {
     let comp = display(element("div", null));
     console.log(comp);
     // append the real dom to the #root
-    // open browser devTools
+    // open browser devTools (inspect)
     const root = document.getElementById("root");
     root.appendChild(comp.dom);
 }

@@ -32,7 +32,7 @@ function display(vdom) {
     return vdom;
 }
 try {
-    // let's add some children
+    // let's add some children, then look at the console
     let comp = display(element("div", { class: "container" },
         element("h1", null)));
     console.log(comp);

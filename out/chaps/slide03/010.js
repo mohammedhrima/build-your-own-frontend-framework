@@ -18,7 +18,6 @@ function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
             vdom.dom = document.createElement(vdom.tag);
-            setProps(vdom);
             break;
         }
         default: {
@@ -32,7 +31,7 @@ function display(vdom) {
     return vdom;
 }
 try {
-    let comp = display(element("div", null));
+    let comp = display(element("div", { class: "container" }));
     console.log(comp);
     const root = document.getElementById("root");
     root.appendChild(comp.dom);

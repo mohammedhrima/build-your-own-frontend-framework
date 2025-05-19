@@ -8,8 +8,6 @@ function element(tag, props = {}, ...children) {
         children: children,
     };
 }
-// time to set some properties :')
-function setProps(vdom) { }
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
@@ -27,7 +25,8 @@ function display(vdom) {
     return vdom;
 }
 try {
-    let comp = display(element("div", null));
+    // let's add class to our div, see the console
+    let comp = display(element("div", { class: "container" }));
     console.log(comp);
     const root = document.getElementById("root");
     root.appendChild(comp.dom);

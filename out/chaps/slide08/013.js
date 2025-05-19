@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -144,12 +141,7 @@ function reconciliate(prev, next) {
 }
 let globalVODM = null;
 function display(vdom) {
-    if (!globalVODM) {
-        execute(CREATE, vdom);
-        globalVODM = vdom;
-    }
-    else
-        reconciliate(globalVODM, vdom);
+    execute(CREATE, vdom);
     return vdom;
 }
 let states = {};

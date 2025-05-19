@@ -13,9 +13,8 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
+        else if (Array.isArray(child))
             result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -165,7 +164,7 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        updateView();
+        display(element(TodoApp, null));
     };
     return [getter, setter];
 };
@@ -190,17 +189,11 @@ function TodoApp() {
             element("input", { name: "task", placeholder: "Add a task" }),
             element("button", { type: "submit" }, "ADD"),
             element("ul", null, todos().map((todo, index) => (element("li", null,
-                element("span", { style: "flex: 1; cursor: pointer;" },
-                    " ",
-                    todo,
-                    " "),
+                element("span", { style: "flex: 1; cursor: pointer;" }, todo),
                 element("button", { type: "button", style: "margin-left: 10px;", onclick: () => removeTodo(index) }, "x"))))))));
 }
-function updateView() {
-    return display(element(TodoApp, null));
-}
 try {
-    let comp = updateView();
+    let comp = display(element(TodoApp, null));
     console.log(comp);
 }
 catch (error) {

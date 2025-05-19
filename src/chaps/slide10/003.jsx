@@ -14,9 +14,11 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
-		} else {
+		} 
+		// if you check the console you will
+		// find that <ul> has array of children
+		else if (Array.isArray(child)) result.push(...check(child));
+		else {
 			result.push(child);
 		}
 	});
@@ -170,7 +172,7 @@ const State = (initValue) => {
 	const getter = () => states[stateIndex];
 	const setter = (newValue) => {
 		states[stateIndex] = newValue;
-		updateView();
+		display(<TodoApp />);
 	};
 	return [getter, setter];
 };
@@ -203,8 +205,7 @@ function TodoApp() {
 					{todos().map((todo, index) => (
 						<li>
 							<span style="flex: 1; cursor: pointer;">
-								{" "}
-								{todo}{" "}
+								{todo}
 							</span>
 							<button
 								type="button"
@@ -221,12 +222,8 @@ function TodoApp() {
 	);
 }
 
-function updateView() {
-	return display(<TodoApp />);
-}
-
 try {
-	let comp = updateView();
+	let comp = display(<TodoApp />);
 	console.log(comp);
 } catch (error) {
 	console.error(error);

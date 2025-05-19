@@ -32,7 +32,6 @@ function display(vdom) {
     return vdom;
 }
 try {
-    // check the console to class attribute in the VDOM
     let comp = display(element("div", { class: "container" }));
     console.log(comp);
     const root = document.getElementById("root");

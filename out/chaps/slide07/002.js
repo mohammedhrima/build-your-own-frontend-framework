@@ -1,8 +1,5 @@
 const ELEMENT = "element";
 const TEXT = "text";
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
 function check(children) {
     const result = [];
     children.forEach((child) => {
@@ -12,9 +9,6 @@ function check(children) {
                 value: child,
                 dom: null,
             });
-        }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
         }
         else {
             result.push(child);
@@ -76,11 +70,16 @@ function Component() {
         element("h1", null, "Hello World"),
         element("button", { onclick: HandleClick }, "click me")));
 }
-try {
+// why updateView() ? you will get it later
+function updateView() {
     let comp = display(element(Component, null));
     console.log(comp);
     const root = document.getElementById("root");
+    root.innerHTML = "";
     root.appendChild(comp.dom);
+}
+try {
+    updateView();
 }
 catch (error) {
     console.error(error);

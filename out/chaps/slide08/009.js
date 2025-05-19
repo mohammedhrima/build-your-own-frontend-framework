@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }

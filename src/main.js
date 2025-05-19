@@ -79,7 +79,7 @@ function open_file(index) {
 			// Step 2: Now safely highlight tokens by index
 			const tokens = Array.from(document.getElementsByClassName("token"));
 			highlight.forEach(([start, end]) => {
-				for (let i = start; i <= end && i < tokens.length; i++) {
+				for (let i = start; i <= start + end && i < tokens.length; i++) {
 					tokens[i].classList.add("highlighted");
 				}
 			});
@@ -128,6 +128,8 @@ document.addEventListener("keydown", (event) => {
 // Listen to hash change
 window.addEventListener("hashchange", load_from_hash);
 
+const root = document.getElementById("root");
+root.innerHTML = "";
 // Initial load
 load_from_hash();
 

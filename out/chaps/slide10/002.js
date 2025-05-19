@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -165,12 +162,10 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        updateView();
+        display(element(TodoApp, null));
     };
     return [getter, setter];
 };
-const [count, setCount] = State(1);
-const HandleClick = () => setCount(count() + 1);
 const [todos, setTodos] = State([]);
 const removeTodo = (index) => {
     const updated = todos().filter((_, i) => i !== index);
@@ -187,18 +182,19 @@ const handleSubmit = (e) => {
 };
 function TodoApp() {
     return (element("root", null,
-        element("div", { class: "container" },
-            element("h1", null,
-                "Hello World [",
-                count(),
-                "]"),
-            element("button", { onclick: HandleClick }, "click me"))));
-}
-function updateView() {
-    return display(element(TodoApp, null));
+        element("form", { class: "todo-app", onsubmit: handleSubmit },
+            element("h1", null, "Minimal TODO App"),
+            element("input", { name: "task", placeholder: "Add a task" }),
+            element("button", { type: "submit" }, "ADD"),
+            element("ul", null, todos().map((todo, index) => (element("li", null,
+                element("span", { style: "flex: 1; cursor: pointer;" },
+                    " ",
+                    todo,
+                    " "),
+                element("button", { type: "button", style: "margin-left: 10px;", onclick: () => removeTodo(index) }, "x"))))))));
 }
 try {
-    let comp = updateView();
+    let comp = display(element(TodoApp, null));
     console.log(comp);
 }
 catch (error) {

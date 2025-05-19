@@ -14,8 +14,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -170,7 +168,7 @@ const State = (initValue) => {
 	const getter = () => states[stateIndex];
 	const setter = (newValue) => {
 		states[stateIndex] = newValue;
-		updateView();
+		display(<Component />);
 	};
 	return [getter, setter];
 };
@@ -189,12 +187,8 @@ function Component() {
 	);
 }
 
-function updateView() {
-	return display(<Component />);
-}
-
 try {
-	let comp = updateView();
+	let comp = display(<Component />);
 	console.log(comp);
 } catch (error) {
 	console.error(error);

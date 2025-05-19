@@ -21,7 +21,6 @@ function createDOM(vdom) {
 	switch (vdom.type) {
 		case ELEMENT: {
 			vdom.dom = document.createElement(vdom.tag);
-			setProps(vdom);
 			break;
 		}
 		default: {
@@ -37,7 +36,7 @@ function display(vdom) {
 }
 
 try {
-	let comp = display(<div></div>);
+	let comp = display(<div class="container"></div>);
 	console.log(comp);
 
 	const root = document.getElementById("root");

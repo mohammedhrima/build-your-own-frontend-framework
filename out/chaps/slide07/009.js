@@ -1,8 +1,5 @@
 const ELEMENT = "element";
 const TEXT = "text";
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
 function check(children) {
     const result = [];
     children.forEach((child) => {
@@ -12,9 +9,6 @@ function check(children) {
                 value: child,
                 dom: null,
             });
-        }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
         }
         else {
             result.push(child);
@@ -66,18 +60,8 @@ function createDOM(vdom) {
         }
     }
 }
-function execute(mode, prev, next = null) {
-    switch (mode) {
-        case CREATE: {
-            createDOM(prev);
-            break;
-        }
-        default:
-            break;
-    }
-}
 function display(vdom) {
-    execute(CREATE, vdom);
+    createDOM(vdom);
     return vdom;
 }
 let states = {};

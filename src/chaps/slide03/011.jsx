@@ -37,7 +37,6 @@ function display(vdom) {
 }
 
 try {
-	// check the console to class attribute in the VDOM
 	let comp = display(<div class="container"></div>);
 	console.log(comp);
 

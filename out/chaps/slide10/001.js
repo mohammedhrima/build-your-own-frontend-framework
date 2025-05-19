@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -165,7 +162,7 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        updateView();
+        display(element(Component, null));
     };
     return [getter, setter];
 };
@@ -180,11 +177,8 @@ function Component() {
                 "]"),
             element("button", { onclick: HandleClick }, "click me"))));
 }
-function updateView() {
-    return display(element(Component, null));
-}
 try {
-    let comp = updateView();
+    let comp = display(element(Component, null));
     console.log(comp);
 }
 catch (error) {

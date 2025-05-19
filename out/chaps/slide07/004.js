@@ -1,8 +1,5 @@
 const ELEMENT = "element";
 const TEXT = "text";
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
 function check(children) {
     const result = [];
     children.forEach((child) => {
@@ -12,9 +9,6 @@ function check(children) {
                 value: child,
                 dom: null,
             });
-        }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
         }
         else {
             result.push(child);
@@ -66,30 +60,38 @@ function createDOM(vdom) {
         }
     }
 }
-function execute(mode, prev, next = null) {
-    switch (mode) {
-        case CREATE: {
-            break;
-        }
-        default:
-            break;
-    }
-}
 function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
+let states = {};
+let index = 1;
+const State = (initValue) => {
+    // save states inside a hash map
+    const stateIndex = index++;
+    states[stateIndex] = initValue;
+    // getter to get the value
+    const getter = () => states[stateIndex];
+    // setter to set it
+    const setter = (newValue) => {
+        states[stateIndex] = newValue;
+    };
+};
 const HandleClick = () => alert("Hellooo");
 function Component() {
     return (element("div", { class: "container" },
         element("h1", null, "Hello World"),
         element("button", { onclick: HandleClick }, "click me")));
 }
-try {
+function updateView() {
     let comp = display(element(Component, null));
     console.log(comp);
     const root = document.getElementById("root");
+    root.innerHTML = "";
     root.appendChild(comp.dom);
+}
+try {
+    updateView();
 }
 catch (error) {
     console.error(error);

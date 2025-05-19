@@ -37,7 +37,7 @@ function display(vdom) {
 }
 
 try {
-	// let's add some children
+	// let's add some children, then look at the console
 	let comp = display(
 		<div class="container">
 			<h1></h1>

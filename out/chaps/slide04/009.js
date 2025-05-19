@@ -10,9 +10,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -25,7 +22,8 @@ function element(tag, props = {}, ...children) {
         tag: tag,
         dom: null,
         props: props,
-        children: children,
+        // check the console
+        children: check(children),
     };
 }
 function setProps(vdom) {
@@ -46,7 +44,6 @@ function createDOM(vdom) {
             break;
         }
         case TEXT: {
-            // create dom for text
             vdom.dom = document.createTextNode(vdom.value);
             break;
         }
@@ -62,7 +59,7 @@ function display(vdom) {
 }
 try {
     let comp = display(element("div", { class: "container" },
-        element("h1", null)));
+        element("h1", null, "Hello World")));
     console.log(comp);
     const root = document.getElementById("root");
     root.appendChild(comp.dom);

@@ -10,9 +10,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -20,10 +17,6 @@ function check(children) {
     return result;
 }
 function element(tag, props = {}, ...children) {
-    if (typeof tag === "function") {
-        console.log("found function:", tag);
-        return tag(props, children);
-    }
     return {
         type: ELEMENT,
         tag: tag,
@@ -75,7 +68,7 @@ function Component() {
         element("button", { onclick: HandleClick }, "click me")));
 }
 try {
-    let comp = display(Component());
+    let comp = display(element(Component, null));
     console.log(comp);
     const root = document.getElementById("root");
     root.appendChild(comp.dom);

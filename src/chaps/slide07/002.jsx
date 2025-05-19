@@ -1,10 +1,6 @@
 const ELEMENT = "element";
 const TEXT = "text";
 
-const CREATE = "create";
-const REPLACE = "replace";
-const REMOVE = "remove";
-
 function check(children) {
 	const result = [];
 	children.forEach((child) => {
@@ -14,8 +10,6 @@ function check(children) {
 				value: child,
 				dom: null,
 			});
-		} else if (Array.isArray(child)) {
-			result.push(...check(child));
 		} else {
 			result.push(child);
 		}
@@ -84,12 +78,18 @@ function Component() {
 	);
 }
 
-try {
+// why updateView() ? you will get it later
+function updateView() {
 	let comp = display(<Component />);
 	console.log(comp);
 
 	const root = document.getElementById("root");
+	root.innerHTML = "";
 	root.appendChild(comp.dom);
+}
+
+try {
+	updateView();
 } catch (error) {
 	console.error(error);
 }

@@ -10,9 +10,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -31,13 +28,7 @@ function element(tag, props = {}, ...children) {
 function setProps(vdom) {
     const props = vdom.props || {};
     Object.keys(props).forEach((key) => {
-        // let's add event listeners to our DOM
-        if (key.startsWith("on")) {
-            const eventType = key.slice(2).toLowerCase();
-            vdom.dom.addEventListener(eventType, props[key]);
-        }
-        else
-            vdom.dom.setAttribute(key, props[key]);
+        vdom.dom.setAttribute(key, props[key]);
     });
 }
 function createDOM(vdom) {
@@ -65,9 +56,12 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
+const HandleClick = () => alert("Hellooo I'm button");
 try {
     let comp = display(element("div", { class: "container" },
-        element("h1", null, "Hello World")));
+        element("h1", null, "Hello World"),
+        element("button", { onclick: HandleClick }, "click me")));
+    // click click
     console.log(comp);
     const root = document.getElementById("root");
     root.appendChild(comp.dom);

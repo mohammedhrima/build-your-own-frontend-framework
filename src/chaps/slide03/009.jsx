@@ -10,12 +10,8 @@ function element(tag, props = {}, ...children) {
 	};
 }
 
-function setProps(vdom) {
-	const props = vdom.props || {};
-	Object.keys(props).forEach((key) => {
-		vdom.dom.setAttribute(key, props[key]);
-	});
-}
+// time to set some properties :')
+function setProps(vdom) {}
 
 function createDOM(vdom) {
 	switch (vdom.type) {
@@ -36,7 +32,7 @@ function display(vdom) {
 }
 
 try {
-	let comp = display(<div></div>);
+	let comp = display(<div class="container"></div>);
 	console.log(comp);
 
 	const root = document.getElementById("root");

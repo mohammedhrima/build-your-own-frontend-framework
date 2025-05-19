@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -48,7 +45,7 @@ function setProps(vdom) {
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
-            if (vdom.tag === "root") {
+            if (prev.tag === "root") {
                 vdom.dom = document.getElementById("root");
             }
             else {
@@ -152,7 +149,7 @@ function display(vdom) {
     if (!globalVODM) {
         execute(CREATE, vdom);
         globalVODM = vdom;
-    }
+    } // otherwise reconciliate the new vdom with globalVDOM
     else
         reconciliate(globalVODM, vdom);
     return vdom;
@@ -165,7 +162,7 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        display(element(Component, null));
+        updateView();
     };
     return [getter, setter];
 };
@@ -180,9 +177,12 @@ function Component() {
                 "]"),
             element("button", { onclick: HandleClick }, "click me"))));
 }
-try {
+function updateView() {
     let comp = display(element(Component, null));
     console.log(comp);
+}
+try {
+    updateView();
 }
 catch (error) {
     console.error(error);

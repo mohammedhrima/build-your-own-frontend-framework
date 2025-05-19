@@ -49,7 +49,10 @@
     line.classList.add("console-line", type);
 
     const message = args.map(arg => {
-      if (typeof arg === "object") {
+      if (typeof arg === "function") {
+        return arg.toString(); // or use String(arg)
+      }
+      else if (typeof arg === "object") {
         try {
           return JSON.stringify(arg, null, 2);
         } catch {

@@ -13,9 +13,6 @@ function check(children) {
                 dom: null,
             });
         }
-        else if (Array.isArray(child)) {
-            result.push(...check(child));
-        }
         else {
             result.push(child);
         }
@@ -48,8 +45,18 @@ function setProps(vdom) {
 function createDOM(vdom) {
     switch (vdom.type) {
         case ELEMENT: {
-            vdom.dom = document.createElement(vdom.tag);
-            setProps(vdom);
+            /*  create costum tag <root></root>
+                to get rid of
+                const root = document.getElementById("root");
+                root.innerHTML = "";
+                root.appendChild(comp.dom); */
+            if (prev.tag === "root") {
+                vdom.dom = document.getElementById("root");
+            }
+            else {
+                vdom.dom = document.createElement(vdom.tag);
+                setProps(vdom);
+            }
             vdom.children.forEach((child) => {
                 createDOM(child);
                 vdom.dom.appendChild(child.dom);
@@ -160,7 +167,7 @@ const State = (initValue) => {
     const getter = () => states[stateIndex];
     const setter = (newValue) => {
         states[stateIndex] = newValue;
-        display(element(Component, null));
+        updateView();
     };
     return [getter, setter];
 };
@@ -174,12 +181,15 @@ function Component() {
             "]"),
         element("button", { onclick: HandleClick }, "click me")));
 }
-try {
+function updateView() {
     let comp = display(element(Component, null));
     console.log(comp);
     const root = document.getElementById("root");
     root.innerHTML = "";
     root.appendChild(comp.dom);
+}
+try {
+    updateView();
 }
 catch (error) {
     console.error(error);
