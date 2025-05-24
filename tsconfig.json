@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2020",
+    "jsx": "react",
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "out",
+    "jsxFactory": "element",
+    "jsxFragmentFactory": "fragment",
+    "allowJs": true,
+    "strict": false,
+    "pretty": true,
+    "newLine": "crlf"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "old-chaps", "old-chaps"]
+}

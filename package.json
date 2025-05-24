@@ -1,0 +1,26 @@
+{
+	"name": "build-your-own-js-framework",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"watch": "npx tsc --pretty -w",
+		"clean": "rm -rf ./out/* && mkdir ./out/chaps",
+		"transpile": "npx tsc --pretty",
+		"start": "npm run clean && npm run transpile && serve ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mohammedhrima/build-your-own-js-framework.git"
+	},
+	"keywords": [],
+	"author": "mohammed hrima",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mohammedhrima/build-your-own-js-framework/issues"
+	},
+	"homepage": "https://github.com/mohammedhrima/build-your-own-js-framework#readme",
+	"description": "tutorial of how to build your own frontend framework",
+	"devDependencies": {
+		"typescript": "^5.8.3"
+	}
+}
