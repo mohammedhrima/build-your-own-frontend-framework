@@ -1,27 +1,31 @@
 const ELEMENT = "element";
 const TEXT = "text";
 function check(children) {
-    let result = [];
-    children.forEach(child => {
+    const result = [];
+    children.forEach((child) => {
         if (["string", "number"].includes(typeof child)) {
             result.push({
                 type: TEXT,
-                value: child
+                value: child,
+                dom: null,
             });
         }
-        else if (Array.isArray(child))
-            result.push(...check(child));
-        else
+        else {
             result.push(child);
+        }
     });
     return result;
 }
 function element(tag, props = {}, ...children) {
+    if (typeof tag === "function") {
+        return tag(props, children);
+    }
     return {
         type: ELEMENT,
         tag: tag,
+        dom: null,
         props: props,
-        children: check(children)
+        children: check(children),
     };
 }
 function setProps(vdom) {
@@ -40,7 +44,7 @@ function createDOM(vdom) {
         case ELEMENT: {
             vdom.dom = document.createElement(vdom.tag);
             setProps(vdom);
-            vdom.children.forEach(child => {
+            vdom.children.forEach((child) => {
                 createDOM(child);
                 vdom.dom.appendChild(child.dom);
             });
@@ -51,7 +55,7 @@ function createDOM(vdom) {
             break;
         }
         default: {
-            console.log(vdom);
+            console.error(vdom);
             throw "Unkonwn type";
         }
     }
@@ -60,10 +64,23 @@ function display(vdom) {
     createDOM(vdom);
     return vdom;
 }
-const HandleClick = () => alert("Hellooo");
-let comp = display(element("div", { class: "container" },
-    element("h1", null, "Hello World"),
-    element("button", { onclick: HandleClick }, "click me")));
-console.log(comp);
-const root = document.getElementById("root");
-root.appendChild(comp.dom);
+const HandleClick = () => alert("Hellooo I'm button");
+function Component() {
+    return (element("div", { class: "container" },
+        element("h1", null, "Hello World"),
+        element("button", { onclick: HandleClick }, "click me")));
+}
+// why updateView() ? you will get it later
+function updateView() {
+    let comp = display(element(Component, null));
+    console.log(comp);
+    const root = document.getElementById("root");
+    root.innerHTML = "";
+    root.appendChild(comp.dom);
+}
+try {
+    updateView();
+}
+catch (error) {
+    console.error(error);
+}

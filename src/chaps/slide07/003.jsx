@@ -1,23 +1,99 @@
-const slide = document.getElementById("slide");
+const ELEMENT = "element";
+const TEXT = "text";
 
-slide.innerHTML = `
-<div class="slide-content">
-  <p>Now it's time for the serious stuff.</p>
-  <p>We'll start working on reusable components.</p>
-  <p>When the first character of a tag is lowercase, the TypeScript (or JSX) transpiler treats it as a native HTML element and passes the tag name as a string.</p>
-  <p>However, if the first character is uppercase, it assumes it's a component and passes it as a reference (identifier).</p>
+function check(children) {
+	const result = [];
+	children.forEach((child) => {
+		if (["string", "number"].includes(typeof child)) {
+			result.push({
+				type: TEXT,
+				value: child,
+				dom: null,
+			});
+		} else {
+			result.push(child);
+		}
+	});
+	return result;
+}
 
-  <p>Example:</p>
-  <pre><code>&lt;div&gt;&lt;/div&gt;</code></pre>
-  <p>Becomes:</p>
-  <pre><code>element("div", null, null)</code></pre>
+function element(tag, props = {}, ...children) {
+	if (typeof tag === "function") {
+		return tag(props, children);
+	}
+	return {
+		type: ELEMENT,
+		tag: tag,
+		dom: null,
+		props: props,
+		children: check(children),
+	};
+}
 
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ccc;" />
+function setProps(vdom) {
+	const props = vdom.props || {};
+	Object.keys(props).forEach((key) => {
+		if (key.startsWith("on")) {
+			const eventType = key.slice(2).toLowerCase();
+			vdom.dom.addEventListener(eventType, props[key]);
+		} else vdom.dom.setAttribute(key, props[key]);
+	});
+}
 
-  <pre><code>&lt;Div&gt;&lt;/Div&gt;</code></pre>
-  <p>Becomes:</p>
-  <pre><code>element(Div, null, null)</code></pre>
+function createDOM(vdom) {
+	switch (vdom.type) {
+		case ELEMENT: {
+			vdom.dom = document.createElement(vdom.tag);
+			setProps(vdom);
+			vdom.children.forEach((child) => {
+				createDOM(child);
+				vdom.dom.appendChild(child.dom);
+			});
+			break;
+		}
+		case TEXT: {
+			vdom.dom = document.createTextNode(vdom.value);
+			break;
+		}
+		default: {
+			console.error(vdom);
+			throw "Unkonwn type";
+		}
+	}
+}
 
-  <p>That's why, when using ReactJS or any framework that uses a virtual DOM, we start component names with an uppercase letter.</p>
-</div>
-`;
+function display(vdom) {
+	createDOM(vdom);
+	return vdom;
+}
+
+let states = {};
+let index = 1;
+
+const State = (initValue) => {};
+
+const HandleClick = () => alert("Hellooo I'm button");
+
+function Component() {
+	return (
+		<div class="container">
+			<h1>Hello World</h1>
+			<button onclick={HandleClick}>click me</button>
+		</div>
+	);
+}
+
+function updateView() {
+	let comp = display(<Component />);
+	console.log(comp);
+
+	const root = document.getElementById("root");
+	root.innerHTML = "";
+	root.appendChild(comp.dom);
+}
+
+try {
+	updateView();
+} catch (error) {
+	console.error(error);
+}
