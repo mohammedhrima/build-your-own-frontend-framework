@@ -61,6 +61,7 @@ function createDOM(vdom: VDOM) {
   }
 }
 
+//@ts-ignore
 function render(vdom: VDOM): VDOM {
   createDOM(vdom);
   Object.keys(vdom.props).forEach((key) => {

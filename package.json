@@ -1,0 +1,13 @@
+{
+  "name": "yakeey-pesentation",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.9.2"
+  }
+}

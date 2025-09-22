@@ -3,24 +3,24 @@
 + Directory need to be listed like this
   ├── out
   ├── src
-  │   └── index.tsx
+  │   └── main.tsx
   ├── index.html
   └── tsconfig.json
 */
 
-// tsconfig.ts
+// tsconfig.json
 // {
 //   "compilerOptions": {
-//     "module": "ESNext",
 //     "target": "ES2020",
+//     "rootDir": "./src",
+//     "outDir": "./out",
 //     "jsx": "react",
-//     "rootDir": "src",
 //     "jsxFactory": "createElement",
 //     "jsxFragmentFactory": "createFragment",
-//     "skipLibCheck": false,
-//     "allowJs": true
+//     "allowJs": true,
 //   },
-//   "exclude": ["node_modules"]
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules", "out"]
 // }
 
 // index.tsx
