@@ -1,6 +1,11 @@
-/*=========== SECTION 4: add attributes ===========*/
-// index.jts
+/*=========== SECTION 5: append to the view ===========*/
+//  index.html
+<html>
+  <div id="root"></div>
+  <script src="index.js"> </script>
+</html>;
 
+// index.tsx
 // @ts-ignore
 type Tag = string;
 // @ts-ignore
@@ -11,11 +16,11 @@ type VDOM = {
   tag?: Tag;
   props?: Props;
   dom?: HTMLElement;
-  children?: Array<VDOM>;
+  children?: VDOM[];
 };
 
 // @ts-ignore
-function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): VDOM {
+function createElement(tag: Tag, props: Props = {}, ...children?: VDOM[]): VDOM {
   props.children = children;
 
   return {
@@ -29,7 +34,7 @@ function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): V
 function render(vdom: VDOM): VDOM {
   vdom.dom = document.createElement(vdom.tag);
   Object.keys(vdom.props).forEach((key) => {
-    if (key == "className") vdom.dom.setAttribute("className", vdom.props[key]);
+    if (["className"].includes(key)) vdom.dom.setAttribute(key, vdom.props[key]);
   });
 
   return vdom;
@@ -37,4 +42,8 @@ function render(vdom: VDOM): VDOM {
 
 // @ts-ignore
 const elem = <div className="container"></div>;
-render(elem);
+// @ts-ignore
+const res = render(elem);
+
+// append element ot the view
+document.getElementById("root").appendChild(res.dom);

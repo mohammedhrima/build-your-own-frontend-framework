@@ -1,6 +1,6 @@
 /*=========== SECTION 3: from Virtual DOM to real DOM ===========*/
 
-// index.ts
+// index.tsx
 // @ts-ignore
 type Tag = string;
 // @ts-ignore
@@ -11,11 +11,11 @@ type VDOM = {
   tag?: Tag;
   props?: Props;
   dom?: HTMLElement;
-  children?: Array<VDOM>;
+  children?: VDOM[];
 };
 
 // @ts-ignore
-function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): VDOM {
+function createElement(tag: Tag, props: Props = {}, ...children?: VDOM[]): VDOM {
   props.children = children;
 
   return {
@@ -25,6 +25,7 @@ function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): V
   };
 }
 
+// converting from virtual dom to real dom
 // @ts-ignore
 function render(vdom: VDOM): VDOM {
   vdom.dom = document.createElement(vdom.tag);

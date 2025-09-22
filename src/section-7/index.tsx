@@ -11,7 +11,7 @@
   <script src="index.js"> </script>
 </html>;
 
-// index.ts
+// index.tsx
 // @ts-ignore
 type Tag = string | Function;
 // @ts-ignore
@@ -21,12 +21,12 @@ type VDOM = {
   type: any;
   tag?: Tag;
   props?: Props;
-  dom?: HTMLElement;
-  children?: Array<VDOM>;
+  dom?: Node;
+  children?: VDOM[];
 };
 
-
-function check(children: Array<VDOM>): Array<VDOM> {
+// @ts-ignore
+function check(children: VDOM[]): VDOM[] {
   const result = [];
   children.forEach((child) => {
     if (["text", "number"].includes(typeof child))
@@ -36,9 +36,10 @@ function check(children: Array<VDOM>): Array<VDOM> {
   return result;
 }
 // @ts-ignore
-function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): VDOM {
+function createElement(tag: Tag, props: Props = {}, ...children?: VDOM[]): VDOM {
   props.children = check(children);
 
+  //@ts-ignore
   if (typeof tag == "function") return createElement(tag(props));
   return {
     type: "element",
@@ -47,22 +48,24 @@ function createElement(tag: Tag, props: Props = {}, ...children: Array<VDOM>): V
   };
 }
 
-function createDOM(vdom) {
+// @ts-ignore
+function createDOM(vdom: VDOM) {
   switch (vdom.type) {
     case "element":
       vdom.dom = document.createElement(vdom.tag);
       break;
     case "text":
+      // @ts-ignore
       vdom.dom = document.createTextNode(vdom.value);
       break;
   }
 }
 
-function render(vdom): VDOM {
+function render(vdom: VDOM): VDOM {
   createDOM(vdom);
   Object.keys(vdom.props).forEach((key) => {
     const curr = vdom.props[key];
-    if (key == "className") vdom.dom.setAttribute("className", curr);
+    if (["className"].includes(key)) vdom.dom.setAttribute(key, curr);
     else if (key == "children") {
       curr.forEach((child) => {
         createDOM(child);
@@ -81,7 +84,10 @@ function App() {
     </div>
   );
 }
-//@ts-ignore
-const res = render(<App />);
+
+// @ts-ignore
+const elem = <App />;
+// @ts-ignore
+const res = render(elem);
 
 document.getElementById("root").appendChild(res.dom);
