@@ -1,94 +1,204 @@
-/* Design tokens: every color and size the app uses. */
+/* ============================================================
+   Design tokens: every color, size and space the app uses.
+   Light is the default (:root); dark is [data-theme="dark"].
+   One brand color (blue). One UI font (Inter); JetBrains Mono only for code.
+   ============================================================ */
+
 :root {
-  color-scheme: dark;
-  --bg: #080b12;
-  --panel: #0e1422;
-  --panel-2: rgba(26, 35, 56, 0.6);
-  --solid: #0d1422;
-  --border: rgba(120, 160, 220, 0.12);
-  --border-2: rgba(120, 170, 235, 0.3);
-  --text: #e7edf8;
-  --muted: #94a1bd;
-  --faint: #5b6680;
-  --accent: #3b82f6;
-  --accent-2: #22d3ee;
-  --radius: 10px;
-  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
-  --shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.85);
+  /* ---- type ---- */
   --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --green: #7ee0a8;
-  --amber: #f3c86b;
-  --red: #ff8499;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 44px;
 
-  /* names the editor + devtools read */
+  /* ---- space ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ---- shape ---- */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --control-sm: 28px;
+  --control: 36px;
+  --control-lg: 44px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* ---- color: light ---- */
+  color-scheme: light;
+  --bg: #f6f7f9; /* page */
+  --card: #ffffff; /* panels, bars, dialogs */
+  --surface: #f1f3f6; /* hover, subtle fills, inputs */
+  --text: #111827;
+  --muted: #5b6474; /* secondary text */
+  --faint: #8b93a1; /* hints, line numbers */
+  --border: #e4e7ec;
+  --border-strong: #d0d5dd;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --primary-subtle: #eef4ff;
+  --primary-subtle-foreground: #1d4ed8;
+  --ring: rgba(37, 99, 235, 0.3);
+
+  --success: #15803d;
+  --success-subtle: #e9f7ee;
+  --warning: #b45309;
+  --warning-subtle: #fef6e7;
+  --warning-border: #f6dcb0;
+  --error: #dc2626;
+  --error-subtle: #fdeeed;
+  --error-border: #f3c9c6;
+
+  --overlay: rgba(16, 24, 40, 0.4);
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-lg: 0 20px 48px -12px rgba(16, 24, 40, 0.25);
+
+  /* ---- code (GitHub light) ---- */
+  --code-bg: #ffffff;
+  --code-fg: #1f2328;
+  --caret: #2563eb;
+  --gutter-fg: #a0a7b2;
+  --gutter-active: #4b5563;
+  --active-line: #f6f8fa;
+  --selection: rgba(37, 99, 235, 0.16);
+  --selection-match: rgba(37, 99, 235, 0.08);
+  --bracket-match: #a0a7b2;
+  --search-match: rgba(234, 179, 8, 0.22);
+  --search-match-border: rgba(202, 138, 4, 0.5);
+  --search-match-active: rgba(234, 179, 8, 0.45);
+  --added-line: rgba(37, 99, 235, 0.06);
+  --added-bar: #2563eb;
+  --spot-line: rgba(37, 99, 235, 0.14);
+  --diff-add-line: rgba(22, 163, 74, 0.08);
+  --diff-add-text: rgba(22, 163, 74, 0.22);
+  --diff-del-line: rgba(220, 38, 38, 0.07);
+  --diff-del-text: rgba(220, 38, 38, 0.2);
+  --tok-keyword: #cf222e;
+  --tok-control: #cf222e;
+  --tok-string: #0a3069;
+  --tok-comment: #6e7781;
+  --tok-number: #0550ae;
+  --tok-fn: #8250df;
+  --tok-type: #953800;
+  --tok-prop: #0550ae;
+  --tok-tag: #116329;
+  --tok-attr: #0550ae;
+  --tok-op: #cf222e;
+  --tok-var: #1f2328;
+  --tok-punct: #57606a;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1013;
+  --card: #15181d;
+  --surface: #1d2127;
+  --text: #e6e8eb;
+  --muted: #9aa3af;
+  --faint: #6b7280;
+  --border: #262b33;
+  --border-strong: #353b45;
+
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+  --primary-foreground: #0b1220;
+  --primary-subtle: rgba(96, 165, 250, 0.14);
+  --primary-subtle-foreground: #93c5fd;
+  --ring: rgba(96, 165, 250, 0.35);
+
+  --success: #4ade80;
+  --success-subtle: rgba(74, 222, 128, 0.12);
+  --warning: #fbbf24;
+  --warning-subtle: rgba(251, 191, 36, 0.1);
+  --warning-border: rgba(251, 191, 36, 0.25);
+  --error: #f87171;
+  --error-subtle: rgba(248, 113, 113, 0.1);
+  --error-border: rgba(248, 113, 113, 0.28);
+
+  --overlay: rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 48px -12px rgba(0, 0, 0, 0.7);
+
+  /* ---- code (GitHub dark) ---- */
+  --code-bg: #15181d;
+  --code-fg: #e6edf3;
+  --caret: #60a5fa;
+  --gutter-fg: #4b5260;
+  --gutter-active: #9aa3af;
+  --active-line: rgba(255, 255, 255, 0.03);
+  --selection: rgba(96, 165, 250, 0.22);
+  --selection-match: rgba(96, 165, 250, 0.1);
+  --bracket-match: #6b7280;
+  --added-line: rgba(96, 165, 250, 0.08);
+  --added-bar: #60a5fa;
+  --spot-line: rgba(96, 165, 250, 0.18);
+  --diff-add-line: rgba(74, 222, 128, 0.08);
+  --diff-add-text: rgba(74, 222, 128, 0.2);
+  --diff-del-line: rgba(248, 113, 113, 0.08);
+  --diff-del-text: rgba(248, 113, 113, 0.22);
+  --tok-keyword: #ff7b72;
+  --tok-control: #ff7b72;
+  --tok-string: #a5d6ff;
+  --tok-comment: #8b949e;
+  --tok-number: #79c0ff;
+  --tok-fn: #d2a8ff;
+  --tok-type: #ffa657;
+  --tok-prop: #79c0ff;
+  --tok-tag: #7ee787;
+  --tok-attr: #79c0ff;
+  --tok-op: #ff7b72;
+  --tok-var: #e6edf3;
+  --tok-punct: #8b949e;
+}
+
+/* ---- names the editor and devtools read: always derived from the tokens above ---- */
+:root {
   --ui: var(--font);
-  --fg: #c8d6ee;
+  --fg: var(--text);
   --fg-strong: var(--text);
-  --border-strong: var(--border-2);
-  --widget-bg: #111a2b;
-  --input-bg: rgba(0, 0, 0, 0.25);
-  --button-2: rgba(255, 255, 255, 0.06);
-  --list-hover: rgba(255, 255, 255, 0.04);
-  --list-active: rgba(59, 130, 246, 0.18);
-  --err: #f43f5e;
+  --editor-bg: var(--code-bg);
+  --widget-bg: var(--card);
+  --input-bg: var(--card);
+  --button-2: var(--surface);
+  --list-hover: var(--surface);
+  --list-active: var(--primary-subtle);
+  --err: var(--error);
 
-  /* code */
-  --editor-bg: transparent;
-  --code-fg: #dbe4f3;
-  --caret: #36b6ff;
-  --gutter-fg: #46506a;
-  --gutter-active: #8a97b8;
-  --active-line: rgba(255, 255, 255, 0.035);
-  --selection: rgba(54, 182, 255, 0.22);
-  --selection-match: rgba(54, 182, 255, 0.12);
-  --bracket-match: #5b6680;
-  --search-match: rgba(243, 200, 107, 0.2);
-  --search-match-border: rgba(243, 200, 107, 0.5);
-  --search-match-active: rgba(243, 200, 107, 0.42);
-  --added-line: rgba(54, 182, 255, 0.13);
-  --added-bar: #36b6ff;
-  --diff-add-line: rgba(54, 182, 255, 0.13);
-  --diff-add-text: rgba(54, 182, 255, 0.3);
-  --diff-del-line: rgba(244, 63, 94, 0.1);
-  --diff-del-text: rgba(244, 63, 94, 0.28);
-  --tok-keyword: #8aa6ff;
-  --tok-control: #c79bff;
-  --tok-string: #86e0a8;
-  --tok-comment: #5b6680;
-  --tok-number: #f3ab73;
-  --tok-fn: #62c9ff;
-  --tok-type: #5fd6d0;
-  --tok-prop: #9fb3d6;
-  --tok-tag: #8aa6ff;
-  --tok-attr: #86e0a8;
-  --tok-op: #9fb3d6;
-  --tok-var: #dbe4f3;
-  --tok-punct: #7d8aab;
-
-  /* devtools (browser devtools layout, platform colors) */
-  --dt-fg: #c8d6ee;
+  --dt-fg: var(--code-fg);
   --dt-muted: var(--muted);
   --dt-border: var(--border);
-  --dt-row-border: rgba(120, 160, 220, 0.08);
-  --dt-hover: rgba(255, 255, 255, 0.045);
-  --dt-selected: rgba(59, 130, 246, 0.28);
-  --dt-tag: #8aa6ff;
-  --dt-attr: #9fb3d6;
-  --dt-val: #f3ab73;
-  --dt-text: #dbe4f3;
-  --dt-comment: #5b6680;
-  --dt-str: #86e0a8;
-  --dt-num: #c79bff;
-  --dt-null: #7d8aab;
-  --dt-key: #62c9ff;
+  --dt-row-border: var(--border);
+  --dt-hover: var(--surface);
+  --dt-selected: var(--primary-subtle);
+  --dt-tag: var(--tok-tag);
+  --dt-attr: var(--tok-attr);
+  --dt-val: var(--tok-string);
+  --dt-text: var(--code-fg);
+  --dt-comment: var(--tok-comment);
+  --dt-str: var(--tok-string);
+  --dt-num: var(--tok-number);
+  --dt-null: var(--faint);
+  --dt-key: var(--tok-fn);
   --dt-key-p: var(--muted);
-  --dt-link: #8ab8ff;
-  --dt-warn-bg: rgba(243, 200, 107, 0.07);
-  --dt-warn-border: rgba(243, 200, 107, 0.18);
-  --dt-warn-fg: var(--amber);
-  --dt-err-bg: rgba(244, 63, 94, 0.08);
-  --dt-err-border: rgba(244, 63, 94, 0.22);
-  --dt-err-fg: var(--red);
-  --dt-flash: rgba(34, 211, 238, 0.38);
+  --dt-link: var(--primary);
+  --dt-warn-bg: var(--warning-subtle);
+  --dt-warn-border: var(--warning-border);
+  --dt-warn-fg: var(--warning);
+  --dt-err-bg: var(--error-subtle);
+  --dt-err-border: var(--error-border);
+  --dt-err-fg: var(--error);
+  --dt-flash: var(--spot-line);
 }

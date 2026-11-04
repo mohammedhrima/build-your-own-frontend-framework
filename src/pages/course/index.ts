@@ -252,22 +252,48 @@ export function mount(root: HTMLElement) {
     );
   };
   const langSwitch = makeLangSwitch();
-  const prevBtn = h("button", { class: "navbtn", title: "Previous step (←)", onclick: () => goStep(step.index - 1) }, "Prev");
-  const nextBtn = h("button", { class: "navbtn primary", title: "Next step (→)", onclick: () => goStep(step.index + 1) }, "Next");
+  // Prev and Next sit right beside the step title
+  const prevBtn = h(
+    "button",
+    { class: "icon-btn bordered", title: "Previous step (←)", "aria-label": "Previous step", onclick: () => goStep(step.index - 1) },
+    icon("chevronLeft"),
+  );
+  const nextBtn = h(
+    "button",
+    { class: "navbtn primary", title: "Next step (→)", onclick: () => goStep(step.index + 1) },
+    "Next",
+    icon("chevronRight"),
+  );
+  // dark by default; the choice is remembered
+  const themeStore = safeStorage<"dark" | "light">("byof:theme", "dark");
+  const themeBtn = h("button", { class: "icon-btn bordered", onclick: () => setTheme(themeStore.get() === "dark" ? "light" : "dark") });
+  function setTheme(theme: "dark" | "light") {
+    themeStore.set(theme);
+    document.documentElement.dataset.theme = theme;
+    themeBtn.replaceChildren(icon(theme === "dark" ? "sun" : "moon"));
+    themeBtn.title = theme === "dark" ? "Light mode" : "Dark mode";
+    themeBtn.setAttribute("aria-label", themeBtn.title);
+  }
+  setTheme(themeStore.get());
   const topbar = h(
     "header",
     { class: "topbar" },
-    stepBtn,
+    h("div", { class: "stepnav" }, prevBtn, stepBtn, nextBtn),
     stepGoal,
     h("span", { class: "grow-sm" }),
     h(
       "div",
       { class: "navgroup" },
-      h("button", { class: "search-btn", title: `Go to file (${MOD}+P)`, onclick: () => quick.show("") }, icon("search")),
+      h("button", { class: "icon-btn search-btn", title: `Go to file (${MOD}+P)`, "aria-label": "Go to file", onclick: () => quick.show("") }, icon("search")),
       langSwitch,
       h("button", { class: "navbtn demo-btn", title: "Play every step automatically", onclick: () => startDemo() }, icon("play"), "Demo"),
-      prevBtn,
-      nextBtn,
+      h(
+        "button",
+        { class: "navbtn run-btn", title: "Download the project and run it on your computer", onclick: () => guide.open() },
+        icon("terminal"),
+        h("span", { class: "run-label" }, "Run on your computer"),
+      ),
+      themeBtn,
     ),
     h("div", { class: "progress" }, progressFill),
   );
@@ -361,7 +387,6 @@ export function mount(root: HTMLElement) {
       "div",
       { class: "intro-text" },
       h("h1", null, "Build your own React."),
-      h("p", { class: "intro-sub" }, "A small framework, written by you in 15 short steps. Every step runs right here: nothing to install."),
       h("div", { class: "intro-lang" }, h("span", null, "Learn with"), makeLangSwitch(true), h("span", { class: "dim" }, "Not sure? Pick JavaScript.")),
       pipeline,
       h(
@@ -369,7 +394,18 @@ export function mount(root: HTMLElement) {
         { class: "intro-actions" },
         h("button", { class: "navbtn primary big", onclick: () => goStep(1) }, "Start building"),
         h("button", { class: "navbtn big", onclick: () => startDemo(1) }, icon("play"), "Watch the demo"),
-        h("button", { class: "link-btn", onclick: () => guide.open() }, "Run it on your computer →"),
+      ),
+      h(
+        "div",
+        { class: "run-panel" },
+        icon("terminal", "run-panel-icon"),
+        h(
+          "div",
+          { class: "run-panel-text" },
+          h("b", null, "Run it on your computer"),
+          h("span", null, "Download the starting point or the finished project and open it in your own editor. About 5 minutes."),
+        ),
+        h("button", { class: "navbtn", onclick: () => guide.open() }, "Open the guide"),
       ),
       roadmap,
     ),
@@ -490,7 +526,7 @@ export function mount(root: HTMLElement) {
     if (step.try) tryLine.append(h("b", null, "Try"), step.try);
     // the steps about running the project offer the setup guide right there
     if (step.id === "setup" || step.id === "ship")
-      tryLine.append(h("button", { class: "link-btn", onclick: () => guide.open() }, "Run it on your computer →"));
+      tryLine.append(h("button", { class: "navbtn try-run", onclick: () => guide.open() }, icon("terminal"), "Run it on your computer"));
     for (const [lang, b] of langBtns) b.classList.toggle("on", lang === ui.lang);
     const isIntro = step.index === 0;
     tryLine.hidden = !step.try || isIntro;

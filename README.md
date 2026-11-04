@@ -63,7 +63,7 @@ Nothing to install: the whole course runs in the page.
 | Where | What it does |
 |---|---|
 | Intro (step 00) | The idea, the finished app running live, the road ahead. Pick TypeScript or JavaScript. |
-| Top bar | Step title + goal. Click the title for every step. `←` / `→` change steps. **Demo** plays the course by itself. |
+| Top bar | `‹` step title `Next ›` and the goal. Click the title for every step; `←` / `→` also change steps. **Demo** plays the course by itself. The sun / moon button switches light and dark (dark by default). |
 | « Try » line | One thing to do in this step. |
 | Editor tabs | The files this step touched: `+` new, `~` changed. The added lines are highlighted. The file tree has the rest. |
 | `out/` folder (bottom of the file tree) | The plain JavaScript the browser runs, made from `src/` by the TypeScript compiler, exactly like UraJS: `src/App.tsx` → `out/App.js`. Read-only. |

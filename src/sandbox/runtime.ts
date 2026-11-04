@@ -484,14 +484,14 @@ export function runtime() {
       const o = document.createElement("div");
       o.style.cssText =
         `position:fixed;left:${r.left - 3}px;top:${r.top - 3}px;width:${r.width + 6}px;height:${r.height + 6}px;` +
-        "border:2px solid #22d3ee;border-radius:6px;background:rgba(34,211,238,.1);" +
-        "box-shadow:0 0 0 4px rgba(34,211,238,.18);transition:opacity .8s ease;opacity:0";
+        "border:2px solid #2563eb;border-radius:6px;background:rgba(37,99,235,.08);" +
+        "box-shadow:0 0 0 4px rgba(37,99,235,.15);transition:opacity .8s ease;opacity:0";
       if (label) {
         const t = document.createElement("div");
         t.textContent = label;
         t.style.cssText =
           "position:absolute;right:-2px;bottom:100%;margin-bottom:3px;padding:1px 6px;border-radius:4px;" +
-          "background:#22d3ee;color:#04202a;font:600 10px/1.5 ui-sans-serif,system-ui,sans-serif;white-space:nowrap";
+          "background:#2563eb;color:#fff;font:600 10px/1.5 ui-sans-serif,system-ui,sans-serif;white-space:nowrap";
         o.appendChild(t);
       }
       getLayer().appendChild(o);

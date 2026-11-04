@@ -35,6 +35,8 @@ export const ICONS: Record<string, string> = {
   terminal: S(`<rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1"/><path d="M4.5 6.5l2 1.75-2 1.75M8 10.5h3.5"/>`),
   more: S(`<circle cx="3.5" cy="8" r=".9" fill="currentColor"/><circle cx="8" cy="8" r=".9" fill="currentColor"/><circle cx="12.5" cy="8" r=".9" fill="currentColor"/>`),
   split: S(`<rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1"/><path d="M8 2.75v10.5"/>`),
+  sun: S(`<circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/>`),
+  moon: S(`<path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z"/>`),
   play: S(`<path d="M5 3.5v9l7-4.5z" fill="currentColor"/>`),
   pause: S(`<path d="M5.5 3.5v9M10.5 3.5v9" stroke-width="2"/>`),
   panel: S(`<rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1"/><path d="M1.75 9.5h12.5"/>`),
