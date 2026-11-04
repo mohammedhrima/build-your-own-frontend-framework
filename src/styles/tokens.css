@@ -1,0 +1,94 @@
+/* Design tokens: every color and size the app uses. */
+:root {
+  color-scheme: dark;
+  --bg: #080b12;
+  --panel: #0e1422;
+  --panel-2: rgba(26, 35, 56, 0.6);
+  --solid: #0d1422;
+  --border: rgba(120, 160, 220, 0.12);
+  --border-2: rgba(120, 170, 235, 0.3);
+  --text: #e7edf8;
+  --muted: #94a1bd;
+  --faint: #5b6680;
+  --accent: #3b82f6;
+  --accent-2: #22d3ee;
+  --radius: 10px;
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.85);
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --green: #7ee0a8;
+  --amber: #f3c86b;
+  --red: #ff8499;
+
+  /* names the editor + devtools read */
+  --ui: var(--font);
+  --fg: #c8d6ee;
+  --fg-strong: var(--text);
+  --border-strong: var(--border-2);
+  --widget-bg: #111a2b;
+  --input-bg: rgba(0, 0, 0, 0.25);
+  --button-2: rgba(255, 255, 255, 0.06);
+  --list-hover: rgba(255, 255, 255, 0.04);
+  --list-active: rgba(59, 130, 246, 0.18);
+  --err: #f43f5e;
+
+  /* code */
+  --editor-bg: transparent;
+  --code-fg: #dbe4f3;
+  --caret: #36b6ff;
+  --gutter-fg: #46506a;
+  --gutter-active: #8a97b8;
+  --active-line: rgba(255, 255, 255, 0.035);
+  --selection: rgba(54, 182, 255, 0.22);
+  --selection-match: rgba(54, 182, 255, 0.12);
+  --bracket-match: #5b6680;
+  --search-match: rgba(243, 200, 107, 0.2);
+  --search-match-border: rgba(243, 200, 107, 0.5);
+  --search-match-active: rgba(243, 200, 107, 0.42);
+  --added-line: rgba(54, 182, 255, 0.13);
+  --added-bar: #36b6ff;
+  --diff-add-line: rgba(54, 182, 255, 0.13);
+  --diff-add-text: rgba(54, 182, 255, 0.3);
+  --diff-del-line: rgba(244, 63, 94, 0.1);
+  --diff-del-text: rgba(244, 63, 94, 0.28);
+  --tok-keyword: #8aa6ff;
+  --tok-control: #c79bff;
+  --tok-string: #86e0a8;
+  --tok-comment: #5b6680;
+  --tok-number: #f3ab73;
+  --tok-fn: #62c9ff;
+  --tok-type: #5fd6d0;
+  --tok-prop: #9fb3d6;
+  --tok-tag: #8aa6ff;
+  --tok-attr: #86e0a8;
+  --tok-op: #9fb3d6;
+  --tok-var: #dbe4f3;
+  --tok-punct: #7d8aab;
+
+  /* devtools (browser devtools layout, platform colors) */
+  --dt-fg: #c8d6ee;
+  --dt-muted: var(--muted);
+  --dt-border: var(--border);
+  --dt-row-border: rgba(120, 160, 220, 0.08);
+  --dt-hover: rgba(255, 255, 255, 0.045);
+  --dt-selected: rgba(59, 130, 246, 0.28);
+  --dt-tag: #8aa6ff;
+  --dt-attr: #9fb3d6;
+  --dt-val: #f3ab73;
+  --dt-text: #dbe4f3;
+  --dt-comment: #5b6680;
+  --dt-str: #86e0a8;
+  --dt-num: #c79bff;
+  --dt-null: #7d8aab;
+  --dt-key: #62c9ff;
+  --dt-key-p: var(--muted);
+  --dt-link: #8ab8ff;
+  --dt-warn-bg: rgba(243, 200, 107, 0.07);
+  --dt-warn-border: rgba(243, 200, 107, 0.18);
+  --dt-warn-fg: var(--amber);
+  --dt-err-bg: rgba(244, 63, 94, 0.08);
+  --dt-err-border: rgba(244, 63, 94, 0.22);
+  --dt-err-fg: var(--red);
+  --dt-flash: rgba(34, 211, 238, 0.38);
+}

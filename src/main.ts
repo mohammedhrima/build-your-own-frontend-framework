@@ -1,4 +1,5 @@
-import "./app/style.css";
-import { mount } from "./app/shell.js";
+import "./styles/tokens.css";
+import "./styles/globals.css";
+import { mount } from "./pages/course";
 
 mount(document.getElementById("app")!);
