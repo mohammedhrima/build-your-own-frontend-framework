@@ -252,18 +252,23 @@ export function mount(root: HTMLElement) {
     );
   };
   const langSwitch = makeLangSwitch();
-  // Prev and Next sit right beside the step title
+  // Prev / Next: a floating bar over the bottom of the editor
+  const prevLabel = h("span", null, "Previous");
+  const nextLabel = h("span", null, "Next");
   const prevBtn = h(
     "button",
-    { class: "icon-btn bordered", title: "Previous step (←)", "aria-label": "Previous step", onclick: () => goStep(step.index - 1) },
+    { class: "navbtn", title: "Previous step (←)", onclick: () => goStep(step.index - 1) },
     icon("chevronLeft"),
+    prevLabel,
   );
   const nextBtn = h(
     "button",
     { class: "navbtn primary", title: "Next step (→)", onclick: () => goStep(step.index + 1) },
-    "Next",
+    nextLabel,
     icon("chevronRight"),
   );
+  const pager = h("nav", { class: "pager", "aria-label": "Steps" }, prevBtn, nextBtn);
+  editorPane.append(pager);
   // dark by default; the choice is remembered
   const themeStore = safeStorage<"dark" | "light">("byof:theme", "dark");
   const themeBtn = h("button", { class: "icon-btn bordered", onclick: () => setTheme(themeStore.get() === "dark" ? "light" : "dark") });
@@ -278,7 +283,7 @@ export function mount(root: HTMLElement) {
   const topbar = h(
     "header",
     { class: "topbar" },
-    h("div", { class: "stepnav" }, prevBtn, stepBtn, nextBtn),
+    h("div", { class: "stepnav" }, stepBtn),
     stepGoal,
     h("span", { class: "grow-sm" }),
     h(
@@ -541,8 +546,9 @@ export function mount(root: HTMLElement) {
     void tryLine.offsetWidth;
     tryLine.classList.add("enter");
     progressFill.style.width = ((step.index + 1) / steps.length) * 100 + "%";
-    prevBtn.toggleAttribute("disabled", step.index === 0);
-    nextBtn.toggleAttribute("disabled", step.index === steps.length - 1);
+    const last = steps.length - 1;
+    prevBtn.toggleAttribute("disabled", step.index <= 1);
+    nextBtn.toggleAttribute("disabled", step.index === last);
     document.title = `${num(step.index)} ${step.title} · build your own frontend framework`;
   }
 

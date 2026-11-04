@@ -1768,6 +1768,30 @@ body.resizing-y * {
   color: var(--muted);
 }
 
+/* ============================================================ pager (Prev / Next over the editor) */
+.pane.editor {
+  position: relative;
+}
+.pager {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-4);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px;
+  transform: translateX(-50%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+}
+body.demoing .pager {
+  display: none;
+}
+
 /* ============================================================ demo bar */
 .demo-btn .i {
   width: 12px;
@@ -1882,6 +1906,9 @@ body.demoing .demo-btn {
 }
 
 @media (max-width: 760px) {
+  .pager .navbtn span {
+    display: none;
+  }
   .topbar {
     gap: var(--space-2);
     padding: 0 var(--space-3);
